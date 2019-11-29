@@ -1,5 +1,17 @@
 {
-    "require": {
-        "docopt/docopt": "^1.0"
-    }
+    "name": "drumsid/php-project-lvl2",
+    "description": "project difference calculator",
+    "authors": [
+        {
+            "name": "Denis Solodukhin",
+            "email": "den-sidnay@yandex.ru"
+        }
+    ],
+    "scripts": {
+        "gendiff": "php gendiff"
+      },
+      "bin": [
+        "bin/gendiff"
+    ],
+    "require": {}
 }
