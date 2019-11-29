@@ -13,5 +13,7 @@
       "bin": [
         "bin/gendiff"
     ],
-    "require": {}
+    "require": {
+        "docopt/docopt": "^1.0"
+    }
 }

@@ -8,16 +8,19 @@ if (file_exists($autoloadPath1)) {
     require_once $autoloadPath2;
 }
 
-$doc = <<<DOC
-Usage: my_program.php [-hso FILE] [--quiet | --verbose] [INPUT ...]
+$gendiff = <<<DOC
+Naval Fate.
+
+Usage:
+  naval_fate.php ship new gendiff
+  naval_fate.php (-h | --help)
+  naval_fate.php --version
 
 Options:
-  -h --help    show this
-  -s --sorted  sorted output
-  -o FILE      specify output file [default: ./test.txt]
-  --quiet      print less text
-  --verbose    print more text
+  -h --help     Show this screen.
+  --version     Show version.
 
 DOC;
 
-$args = Docopt::handle($doc);
+$args = Docopt::handle($gendiff);
+print_r($args);
