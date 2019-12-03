@@ -36,28 +36,29 @@ function compareJson($json1, $json2)
     foreach ($json2 as $key2 => $vol2){
       if(array_key_exists($key1, $json2)){
         if($key1 == $key2 && $vol1 == $vol2){
-          $compareJson1InJson2[$key1] = $vol1;
+          $compareJson1InJson2["    " . $key1] = " " . $vol1;
         }
         if($key1 == $key2 && $vol1 != $vol2){
-          $compareJson1InJson2["+ " . $key2] = $vol2;
-          $compareJson1InJson2["- " . $key1] = $vol1;
+          $compareJson1InJson2["  + " . $key2] = " " . $vol2;
+          $compareJson1InJson2["  - " . $key1] = " " . $vol1;
         }
       } else {
-        $compareJson1InJson2["- " . $key1] = $vol1;
+        $compareJson1InJson2["  - " . $key1] = " " . $vol1;
       }
     }
   }
   
   $searchNewDataInJson2 = [];
   foreach($json2 as $key2 => $vol2){
-    if(!array_key_exists($key2, $compareJson1InJson2)){
-      $searchNewDataInJson2["+ " . $key2] = $vol2;
+    if(!array_key_exists("    " .$key2, $compareJson1InJson2)){
+      $searchNewDataInJson2["  + " . $key2] = " " . $vol2;
     }
   }
 
   $strJson = json_encode(array_merge($compareJson1InJson2, $searchNewDataInJson2));
 
-  return afterFistBeforLast(str_replace(',', PHP_EOL, $strJson), PHP_EOL);
+  $tmp = afterFistBeforLast(str_replace(',', PHP_EOL, $strJson), PHP_EOL);
+  return str_replace('"', "", $tmp);
 }
 
 print_r(compareJson($json1, $json2));
