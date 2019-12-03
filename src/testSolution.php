@@ -57,5 +57,7 @@ function compareJson($json1, $json2)
 
   $strJson = json_encode(array_merge($compareJson1InJson2, $searchNewDataInJson2));
 
-  return afterFistBeforLast(str_replace(',', '<br>', $strJson), '<br>');
+  return afterFistBeforLast(str_replace(',', PHP_EOL, $strJson), PHP_EOL);
 }
+
+print_r(compareJson($json1, $json2));
