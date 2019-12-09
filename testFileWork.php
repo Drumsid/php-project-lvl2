@@ -1,10 +1,10 @@
 <?php
 
-$json1 = file_get_contents('after.json');
+// $json1 = file_get_contents('after.json');
 
-// echo $json1;
+// // echo $json1;
 
-$json2 = file_get_contents('before.json');
+// $json2 = file_get_contents('before.json');
 
 // echo $json2;
 
@@ -26,8 +26,10 @@ function afterFistBeforLast($str, $del)
 
 function compareJson($json1, $json2)
 {
-  $json1 = json_decode($json1, true);
-  $json2 = json_decode($json2, true);
+  // $json1 = json_decode($json1, true);
+  // $json2 = json_decode($json2, true);
+  $json1 = file_get_contents($json1);
+  $json2 = file_get_contents($json2);
 
   $compareJson1InJson2 = [];
   foreach ($json1 as $key1 => $vol1){
@@ -59,4 +61,6 @@ function compareJson($json1, $json2)
   return str_replace('"', "", $tmp);
 }
 
+// var_dump(json_decode(file_get_contents('after.json'), true));
+// var_dump($json2);
 print_r(compareJson($json1, $json2));
