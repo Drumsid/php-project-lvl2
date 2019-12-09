@@ -1,5 +1,13 @@
 <?php
 
+$json1 = file_get_contents('after.json');
+
+// echo $json1;
+
+$json2 = file_get_contents('before.json');
+
+// echo $json2;
+
 function afterFistBeforLast($str, $del)
 {
   $search = "";
@@ -15,20 +23,6 @@ function afterFistBeforLast($str, $del)
   return $search;
 }
 
-$json1 = '{
-  "host": "hexlet.io",
-  "timeout": 50,
-  "proxy": "123.234.53.22"
-}';
-$json2 = '{
-  "timeout": 20,
-  "verbose": true,
-  "host": "hexlet.io"
-}';
-
-// $json1 = fopen('after.json', 'r+');
-
-// $json2 = fopen('before.json', 'r+');
 
 function compareJson($json1, $json2)
 {
