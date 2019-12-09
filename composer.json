@@ -11,7 +11,8 @@
         "gendiff": "php gendiff"
       },
       "bin": [
-        "bin/gendiff"
+        "bin/gendiff",
+        "bin/gendifftest"
     ],
     "require": {
         "docopt/docopt": "^1.0"

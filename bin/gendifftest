@@ -13,9 +13,9 @@ $gendiff = <<<DOC
 Generate diff
 
 Usage:
-  gendiff (-h|--help)
-  gendiff (-v|--version)
-  gendiff [--format <fmt>] <firstFile> <secondFile>
+  gendifftest (-h|--help)
+  gendifftest (-v|--version)
+  gendifftest [--format <fmt>] <firstFile> <secondFile>
 
 Options:
   -h --help                     Show this screen
@@ -26,20 +26,20 @@ DOC;
 $params = array(
     'argv'=>array_slice($_SERVER['argv'], 1),
     'help'=>true,
-    'version'=>'dev version',
+    'version'=>'dev test version',
     'optionsFirst'=>false,
 );
 
 // print_r($params['argv']);
 $args = Docopt::handle($gendiff, $params);
 
-// function test($firstFile, $secondFile)
-// {
-//   return $firstFile + $secondFile;
-// }
+function test($firstFile, $secondFile)
+{
+  return $firstFile + $secondFile;
+}
 
 // var_dump($args);
 // var_dump($args->args["<firstFile>"]);
 // var_dump($args->args["<secondFile>"]);
 
-// print_r(test($args->args["<firstFile>"], $args->args["<secondFile>"]));
+print_r(test($args->args["<firstFile>"], $args->args["<secondFile>"]));
