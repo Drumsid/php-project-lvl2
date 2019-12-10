@@ -50,10 +50,8 @@ function afterFistBeforLast($str, $del)
 
 function compareJson($json1, $json2)
 {
-  $json1 = json_decode(file_get_contents($json1), true);
-  $json2 = json_decode(file_get_contents($json2), true);
-  // $json1 = file_get_contents($json1);
-  // $json2 = file_get_contents($json2);
+  $json1 = json_decode(file_get_contents(__DIR__ . $json1), true);
+  $json2 = json_decode(file_get_contents(__DIR__ . $json2), true);
 
   $compareJson1InJson2 = [];
   foreach ($json1 as $key1 => $vol1){
@@ -87,5 +85,6 @@ function compareJson($json1, $json2)
 
 // var_dump(json_decode(file_get_contents('after.json'), true));
 // var_dump($json2);
+// var_dump(__DIR__);
 print_r(compareJson($args->args["<firstFile>"], $args->args["<secondFile>"]));
 // var_dump(file_get_contents($args->args["<firstFile>"]));
