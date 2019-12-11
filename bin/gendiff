@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
 
+const CORRECT_PATH = __DIR__ . "/";
+
 $autoloadPath1 = __DIR__ . '/../../../autoload.php';
 $autoloadPath2 = __DIR__ . '/../vendor/autoload.php';
 if (file_exists($autoloadPath1)) {
@@ -47,11 +49,31 @@ function afterFistBeforLast($str, $del)
   return $search;
 }
 
+function correct_path($path)
+{
+  if (file_exists($path)){
+    return json_decode(file_get_contents($path), true);
+  } else {
+    return json_decode(file_get_contents(CORRECT_PATH . $path), true);
+  }
+}
 
 function compareJson($json1, $json2)
 {
-  $json1 = json_decode(file_get_contents(__DIR__ . $json1), true);
-  $json2 = json_decode(file_get_contents(__DIR__ . $json2), true);
+  $json1 = correct_path($json1);
+  $json2 = correct_path($json2);
+  // if (file_exists($json1)){
+  //   $json1 = json_decode(file_get_contents($json1), true);
+  // } else {
+  //   $json1 = json_decode(file_get_contents(CORRECT_PATH . $json1), true);
+  // }
+  // if (file_exists($json2)){
+  //   $json2 = json_decode(file_get_contents($json2), true);
+  // } else {
+  //   $json2 = json_decode(file_get_contents(CORRECT_PATH . $json2), true);
+  // }
+  // $json1 = json_decode(file_get_contents(CORRECT_PATH . $json1), true);
+  // $json2 = json_decode(file_get_contents(CORRECT_PATH . $json2), true);
 
   $compareJson1InJson2 = [];
   foreach ($json1 as $key1 => $vol1){
@@ -73,7 +95,7 @@ function compareJson($json1, $json2)
   $searchNewDataInJson2 = [];
   foreach($json2 as $key2 => $vol2){
     if(!array_key_exists("    " .$key2, $compareJson1InJson2)){
-      $searchNewDataInJson2["  + " . $key2] = " " . $vol2;
+      $searchNewDataInJson2["  + " . $key2] = " " . json_encode($vol2);
     }
   }
 
