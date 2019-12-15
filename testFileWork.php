@@ -63,4 +63,7 @@ function compareJson($json1, $json2)
 
 // var_dump(json_decode(file_get_contents('after.json'), true));
 // var_dump($json2);
-print_r(compareJson($json1, $json2));
+// print_r(compareJson($json1, $json2));
+print_r(__DIR__);
+var_dump(file_exists(__DIR__ . '/after.json')); // проверка пути
+var_dump(file_exists('C:/Users/d_solodukhin/Desktop/hexlet/php-project-lvl2/after.json')); // проверка пути
