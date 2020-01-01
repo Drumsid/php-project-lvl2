@@ -6,9 +6,9 @@ const CORRECT_PATH = __DIR__ . "/";
 $autoloadPath1 = __DIR__ . '/../../../autoload.php';
 $autoloadPath2 = __DIR__ . '/../vendor/autoload.php';
 if (file_exists($autoloadPath1)) {
-    require_once $autoloadPath1;
+  require_once $autoloadPath1;
 } else {
-    require_once $autoloadPath2;
+  require_once $autoloadPath2;
 }
 
 $gendiff = <<<DOC
@@ -26,87 +26,12 @@ Options:
 DOC;
 
 $params = array(
-    'argv'=>array_slice($_SERVER['argv'], 1),
-    'help'=>true,
-    'version'=>'dev version',
-    'optionsFirst'=>false,
+  'argv' => array_slice($_SERVER['argv'], 1),
+  'help' => true,
+  'version' => 'dev version',
+  'optionsFirst' => false,
 );
 
 $args = Docopt::handle($gendiff, $params);
 
-function afterFistBeforLast($str, $del)
-{
-  $search = "";
-  for($i = 0; $i < strlen($str); $i++){
-    $search .= $str[$i];
-      if($i == 0){
-        $search .= $del;
-      }
-      if($i == strlen($str) - 2){
-        $search .= $del;
-      } 
-  }
-  return $search;
-}
-
-function correct_path($path)
-{
-  if (file_exists($path)){
-    return json_decode(file_get_contents($path), true);
-  } else {
-    return json_decode(file_get_contents(CORRECT_PATH . $path), true);
-  }
-}
-
-function compareJson($json1, $json2)
-{
-  $json1 = correct_path($json1);
-  $json2 = correct_path($json2);
-  // if (file_exists($json1)){
-  //   $json1 = json_decode(file_get_contents($json1), true);
-  // } else {
-  //   $json1 = json_decode(file_get_contents(CORRECT_PATH . $json1), true);
-  // }
-  // if (file_exists($json2)){
-  //   $json2 = json_decode(file_get_contents($json2), true);
-  // } else {
-  //   $json2 = json_decode(file_get_contents(CORRECT_PATH . $json2), true);
-  // }
-  // $json1 = json_decode(file_get_contents(CORRECT_PATH . $json1), true);
-  // $json2 = json_decode(file_get_contents(CORRECT_PATH . $json2), true);
-
-  $compareJson1InJson2 = [];
-  foreach ($json1 as $key1 => $vol1){
-    foreach ($json2 as $key2 => $vol2){
-      if(array_key_exists($key1, $json2)){
-        if($key1 == $key2 && $vol1 == $vol2){
-          $compareJson1InJson2["    " . $key1] = " " . $vol1;
-        }
-        if($key1 == $key2 && $vol1 != $vol2){
-          $compareJson1InJson2["  + " . $key2] = " " . $vol2;
-          $compareJson1InJson2["  - " . $key1] = " " . $vol1;
-        }
-      } else {
-        $compareJson1InJson2["  - " . $key1] = " " . $vol1;
-      }
-    }
-  }
-  
-  $searchNewDataInJson2 = [];
-  foreach($json2 as $key2 => $vol2){
-    if(!array_key_exists("    " .$key2, $compareJson1InJson2)){
-      $searchNewDataInJson2["  + " . $key2] = " " . json_encode($vol2);
-    }
-  }
-
-  $strJson = json_encode(array_merge($compareJson1InJson2, $searchNewDataInJson2));
-
-  $tmp = afterFistBeforLast(str_replace(',', PHP_EOL, $strJson), PHP_EOL);
-  return str_replace('"', "", $tmp);
-}
-
-// var_dump(json_decode(file_get_contents('after.json'), true));
-// var_dump($json2);
-// var_dump(__DIR__);
-print_r(compareJson($args->args["<firstFile>"], $args->args["<secondFile>"]));
-// var_dump(file_get_contents($args->args["<firstFile>"]));
+print_r(Differ\differ\genDiff\genDiff($args->args["<firstFile>"], $args->args["<secondFile>"]));
