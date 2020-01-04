@@ -6,12 +6,11 @@
         "email": "den-sidnay@yandex.ru"
     }],
     "scripts": {
-        "gendiff": "php gendiff",
-        "phpcs": "phpcs"
+        "phpcs": "phpcs",
+        "phpunit": "phpunit tests"
     },
     "bin": [
-        "bin/gendiff",
-        "bin/gendifftest"
+        "bin/gendiff"
     ],
     "require": {
         "docopt/docopt": "^1.0",
