@@ -23,15 +23,24 @@ function correct_path($path)
 {
     if (file_exists($path)) {
         return json_decode(file_get_contents($path), true);
-    } else {
+    }
+    if (file_exists($path)) {
         return json_decode(file_get_contents(CORRECT_PATH . $path), true);
     }
+    return $path;
 }
 
 function genDiff($json1, $json2)
 {
     $json1 = correct_path($json1);
     $json2 = correct_path($json2);
+
+    if (! is_array($json1)) {
+        return "{$json1} file not exists or path incorrect\n";
+    }
+    if (! is_array($json1)) {
+        return "{$json2} file not exists or path incorrect\n";
+    }
 
     $compareJson1InJson2 = [];
     foreach ($json1 as $key1 => $vol1) {
