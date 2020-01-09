@@ -30,22 +30,22 @@ function correct_path($path)
     return $path;
 }
 
-function genDiff($json1, $json2)
+function genDiff($beforeJson, $afterJson)
 {
-    $json1 = correct_path($json1);
-    $json2 = correct_path($json2);
+    $beforeJson = correct_path($beforeJson);
+    $afterJson = correct_path($afterJson);
 
-    if (! is_array($json1)) {
-        return "{$json1} file not exists or path incorrect\n";
+    if (! is_array($beforeJson)) {
+        return "{$beforeJson} file not exists or path incorrect\n";
     }
-    if (! is_array($json1)) {
-        return "{$json2} file not exists or path incorrect\n";
+    if (! is_array($beforeJson)) {
+        return "{$afterJson} file not exists or path incorrect\n";
     }
 
     $compareJson1InJson2 = [];
-    foreach ($json1 as $key1 => $vol1) {
-        foreach ($json2 as $key2 => $vol2) {
-            if (array_key_exists($key1, $json2)) {
+    foreach ($beforeJson as $key1 => $vol1) {
+        foreach ($afterJson as $key2 => $vol2) {
+            if (array_key_exists($key1, $afterJson)) {
                 if ($key1 == $key2 && $vol1 == $vol2) {
                     $compareJson1InJson2["    " . $key1] = " " . $vol1;
                 }
@@ -60,7 +60,7 @@ function genDiff($json1, $json2)
     }
 
     $searchNewDataInJson2 = [];
-    foreach ($json2 as $key2 => $vol2) {
+    foreach ($afterJson as $key2 => $vol2) {
         if (!array_key_exists("    " . $key2, $compareJson1InJson2)) {
             $searchNewDataInJson2["  + " . $key2] = " " . json_encode($vol2);
         }

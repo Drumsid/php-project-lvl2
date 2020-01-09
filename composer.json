@@ -23,7 +23,8 @@
     },
     "autoload": {
         "files": [
-            "src/differ/genDiff.php"
+            "src/differ/genDiff.php",
+            "src/differ/yamlic.php"
         ]
     }
 }

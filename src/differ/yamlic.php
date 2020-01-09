@@ -4,7 +4,7 @@ namespace Differ\differ\Yamlic;
 
 use Symfony\Component\Yaml\Yaml;
 
-// const PATH_YAML = __DIR__ . "/../"; ругается на константу почему то
+const CORRECT_PATH_YAML = __DIR__ . "/../../";
 
 $autoloadPath1 = __DIR__ . '/../../autoload.php';
 $autoloadPath2 = __DIR__ . '/../../vendor/autoload.php';
@@ -15,80 +15,53 @@ if (file_exists($autoloadPath1)) {
 }
 
 
-// парсит из Yaml в объект, без флага будет массив
-$afterYml = Yaml::parseFile(__DIR__ . '/../../after.yml', Yaml::PARSE_OBJECT_FOR_MAP);
-// парсит из Yaml в объект, без флага будет массив
-$beforeYml = Yaml::parseFile(__DIR__ . '/../../before.yml');
-// $value = Yaml::parse($yaml, Yaml::PARSE_OBJECT_FOR_MAP);
-// $value = Yaml::parse("foo: bar", Yaml::PARSE_OBJECT_FOR_MAP);
-print_r($afterYml);
-print_r($beforeYml);
-
-$beforeYmlFile = Yaml::dump($beforeYml); // пишет из объекта, без флага будет массив
-
-// print_r($yaml);
-file_put_contents(__DIR__ . '/../../beforeYmlFile.yml', $beforeYmlFile);
-// foreach ($value as $val) {
-//     var_dump($val);
-// }
-
-function genDiff2($json1, $json2)
+function afterFistBeforLast($str, $del)
 {
+    $search = "";
+    for ($i = 0; $i < strlen($str); $i++) {
+        $search .= $str[$i];
+        if ($i == 0) {
+            $search .= $del;
+        }
+        if ($i == strlen($str) - 2) {
+            $search .= $del;
+        }
+    }
+    return $search;
+}
 
-    $compareJson1InJson2 = [];
-    foreach ($json1 as $key1 => $vol1) {
-        foreach ($json2 as $key2 => $vol2) {
-            if (array_key_exists($key1, $json2)) {
+function parseYml($yaml1, $yaml2)
+{
+    $yaml1 = Yaml::parseFile(CORRECT_PATH_YAML . $yaml1, Yaml::PARSE_OBJECT_FOR_MAP);
+    $yaml2 = Yaml::parseFile(CORRECT_PATH_YAML . $yaml2, Yaml::PARSE_OBJECT_FOR_MAP);
+
+
+    $compareYml1InYml2 = [];
+    foreach ($yaml1 as $key1 => $vol1) {
+        foreach ($yaml2 as $key2 => $vol2) {
+            if (array_key_exists($key1, $yaml2)) {
                 if ($key1 == $key2 && $vol1 == $vol2) {
-                    $compareJson1InJson2["    " . $key1] = $vol1;
+                    $compareYml1InYml2["    " . $key1] = " " . $vol1;
                 }
                 if ($key1 == $key2 && $vol1 != $vol2) {
-                    $compareJson1InJson2["  + " . $key2] = $vol2;
-                    $compareJson1InJson2["  - " . $key1] = $vol1;
+                    $compareYml1InYml2["  + " . $key2] = " " . $vol2;
+                    $compareYml1InYml2["  - " . $key1] = " " . $vol1;
                 }
             } else {
-                $compareJson1InJson2["  - " . $key1] = $vol1;
+                $compareYml1InYml2["  - " . $key1] = " " . $vol1;
             }
         }
     }
 
-    $searchNewDataInJson2 = [];
-    foreach ($json2 as $key2 => $vol2) {
-        if (!array_key_exists("    " . $key2, $compareJson1InJson2)) {
-            $searchNewDataInJson2["  + " . $key2] = $vol2;
+    $searchNewDataInYml2 = [];
+    foreach ($yaml2 as $key2 => $vol2) {
+        if (!array_key_exists("    " . $key2, $compareYml1InYml2)) {
+            $searchNewDataInYml2["  + " . $key2] = " " . json_encode($vol2);
         }
     }
 
-    $strJson = array_merge($compareJson1InJson2, $searchNewDataInJson2);
-    return $strJson;
+    $strJson = json_encode(array_merge($compareYml1InYml2, $searchNewDataInYml2));
+
+    $tmp = afterFistBeforLast(str_replace(',', PHP_EOL, $strJson), PHP_EOL);
+    return str_replace('"', "", $tmp);
 }
-
-
-// пробовал сравнить объект и записать в файл
-var_dump(genDiff2($beforeYml, $afterYml));
-$newYamlDiff = genDiff2($beforeYml, $afterYml);
-
-// $valueYaml = Yaml::parse($newYaml, Yaml::PARSE_OBJECT_FOR_MAP);
-$diffYamlWrite = Yaml::dump($newYamlDiff);
-file_put_contents(__DIR__ . '/../../diffYamlWrite.yml', $diffYamlWrite);
-
-$testArr = [
-    'test' => 'test',
-    'bool' => true,
-    'int' => 56,
-];
-$arrYamlPrint = Yaml::dump($testArr);
-file_put_contents(__DIR__ . '/../../arrYamlPrint.yml', $arrYamlPrint);
-
-function arrInFor()
-{
-    $res = [];
-    for ($i = 0; $i < 5; $i++) {
-        $res["test" . "{$i}"] = $i;
-    }
-    return $res;
-}
-
-$arrInFor = arrInFor();
-$arrInForPrint = Yaml::dump($arrInFor);
-file_put_contents(__DIR__ . '/../../arrInForPrint.yml', $arrInForPrint);
