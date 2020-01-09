@@ -34,5 +34,9 @@ $params = array(
 
 $args = Docopt::handle($gendiff, $params);
 
+//тестовый способ посмотреть как пишет в файл
+$testWriteFromBinDiff = Differ\differ\genDiff\genDiff($args->args["<firstFile>"], $args->args["<secondFile>"]);
+file_put_contents(__DIR__ . '/../testWriteFromBinDiff.yml', $testWriteFromBinDiff);
+
 print_r(Differ\differ\genDiff\genDiff($args->args["<firstFile>"], $args->args["<secondFile>"]));
 // print_r($args);
