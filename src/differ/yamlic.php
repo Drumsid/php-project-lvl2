@@ -6,13 +6,13 @@ use Symfony\Component\Yaml\Yaml;
 
 const CORRECT_PATH_YAML = __DIR__ . "/../../";
 
-$autoloadPath1 = __DIR__ . '/../../autoload.php';
-$autoloadPath2 = __DIR__ . '/../../vendor/autoload.php';
-if (file_exists($autoloadPath1)) {
-    require_once $autoloadPath1;
-} else {
-    require_once $autoloadPath2;
-}
+// $autoloadPath1 = __DIR__ . '/../../autoload.php';    // без этой записи в bin/gendiff функция parseYml работает
+// $autoloadPath2 = __DIR__ . '/../../vendor/autoload.php';  // но если без этой записи вызвать
+// if (file_exists($autoloadPath1)) {                       // в этом файле функцию parseYml - ошибка
+//     require_once $autoloadPath1;
+// } else {
+//     require_once $autoloadPath2;
+// }
 
 
 function afterFistBeforLast($str, $del)
@@ -65,3 +65,5 @@ function parseYml($yaml1, $yaml2)
     $tmp = afterFistBeforLast(str_replace(',', PHP_EOL, $strJson), PHP_EOL);
     return str_replace('"', "", $tmp);
 }
+
+// print_r(parseYml($yaml1, $yaml2));
