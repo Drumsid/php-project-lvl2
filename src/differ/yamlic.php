@@ -4,6 +4,9 @@ namespace Differ\differ\Yamlic;
 
 use Symfony\Component\Yaml\Yaml;
 
+use function Differ\differ\Parsers\parsing;
+use function Differ\differ\Parsers\correctCurleBrackets;
+
 const CORRECT_PATH_YAML = __DIR__ . "/../../";
 
 // $autoloadPath1 = __DIR__ . '/../../autoload.php';    // без этой записи в bin/gendiff функция parseYml работает
@@ -14,56 +17,16 @@ const CORRECT_PATH_YAML = __DIR__ . "/../../";
 //     require_once $autoloadPath2;
 // }
 
-
-function afterFistBeforLast($str, $del)
+function parseYml($beforeYml, $afterYml)
 {
-    $search = "";
-    for ($i = 0; $i < strlen($str); $i++) {
-        $search .= $str[$i];
-        if ($i == 0) {
-            $search .= $del;
-        }
-        if ($i == strlen($str) - 2) {
-            $search .= $del;
-        }
-    }
-    return $search;
-}
+    // доделать для абсолютных и относительных путей
+    $beforeYml = Yaml::parseFile(CORRECT_PATH_YAML . $beforeYml, Yaml::PARSE_OBJECT_FOR_MAP);
+    $afterYml = Yaml::parseFile(CORRECT_PATH_YAML . $afterYml, Yaml::PARSE_OBJECT_FOR_MAP);
 
-function parseYml($yaml1, $yaml2)
-{
-    $yaml1 = Yaml::parseFile(CORRECT_PATH_YAML . $yaml1, Yaml::PARSE_OBJECT_FOR_MAP);
-    $yaml2 = Yaml::parseFile(CORRECT_PATH_YAML . $yaml2, Yaml::PARSE_OBJECT_FOR_MAP);
+    $strJson = parsing($beforeYml, $afterYml);
 
-
-    $compareYml1InYml2 = [];
-    foreach ($yaml1 as $key1 => $vol1) {
-        foreach ($yaml2 as $key2 => $vol2) {
-            if (array_key_exists($key1, $yaml2)) {
-                if ($key1 == $key2 && $vol1 == $vol2) {
-                    $compareYml1InYml2["    " . $key1] = " " . $vol1;
-                }
-                if ($key1 == $key2 && $vol1 != $vol2) {
-                    $compareYml1InYml2["  + " . $key2] = " " . $vol2;
-                    $compareYml1InYml2["  - " . $key1] = " " . $vol1;
-                }
-            } else {
-                $compareYml1InYml2["  - " . $key1] = " " . $vol1;
-            }
-        }
-    }
-
-    $searchNewDataInYml2 = [];
-    foreach ($yaml2 as $key2 => $vol2) {
-        if (!array_key_exists("    " . $key2, $compareYml1InYml2)) {
-            $searchNewDataInYml2["  + " . $key2] = " " . $vol2 = is_bool($vol2) ? json_encode($vol2) : $vol2;
-        }
-    }
-
-    $strJson = json_encode(array_merge($compareYml1InYml2, $searchNewDataInYml2));
-
-    $tmp = afterFistBeforLast(str_replace(',', PHP_EOL, $strJson), PHP_EOL);
+    $tmp = correctCurleBrackets(str_replace(',', PHP_EOL, $strJson), PHP_EOL);
     return str_replace('"', "", $tmp);
 }
 
-// print_r(parseYml($yaml1, $yaml2));
+// print_r(parseYml("before.yml", "after.yml"));

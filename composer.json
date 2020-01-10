@@ -24,7 +24,8 @@
     "autoload": {
         "files": [
             "src/differ/genDiff.php",
-            "src/differ/yamlic.php"
+            "src/differ/yamlic.php",
+            "src/differ/parsers.php"
         ]
     }
 }
