@@ -17,11 +17,28 @@ const CORRECT_PATH_YAML = __DIR__ . "/../../";
 //     require_once $autoloadPath2;
 // }
 
+function correct_path_yml($path)
+{
+    if (file_exists($path)) {
+        return Yaml::parseFile($path, Yaml::PARSE_OBJECT_FOR_MAP);
+    }
+    if (file_exists($path)) {
+        return Yaml::parseFile(CORRECT_PATH_YAML . $path, Yaml::PARSE_OBJECT_FOR_MAP);
+    }
+    return $path;
+}
+
 function parseYml($beforeYml, $afterYml)
 {
-    // доделать для абсолютных и относительных путей
-    $beforeYml = Yaml::parseFile(CORRECT_PATH_YAML . $beforeYml, Yaml::PARSE_OBJECT_FOR_MAP);
-    $afterYml = Yaml::parseFile(CORRECT_PATH_YAML . $afterYml, Yaml::PARSE_OBJECT_FOR_MAP);
+    $beforeYml = correct_path_yml($beforeYml);
+    $afterYml = correct_path_yml($afterYml);
+
+    if (! is_object($beforeYml)) {
+        return "{$beforeYml} file not exists or path incorrect\n";
+    }
+    if (! is_object($afterYml)) {
+        return "{$afterYml} file not exists or path incorrect\n";
+    }
 
     $strJson = parsing($beforeYml, $afterYml);
 

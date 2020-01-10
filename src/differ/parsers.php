@@ -24,8 +24,8 @@ function parsing($beforeFile, $afterFile)
     $searchNewDataInAfter = [];
     foreach ($afterFile as $keyAfter => $volAfter) {
         if (!array_key_exists("    " . $keyAfter, $compareBeforeInAfter)) {
-            $searchNewDataInAfter["  + " . $keyAfter] = " " .
-            $volAfter == is_bool($volAfter) ? json_encode($volAfter) : $volAfter;
+            $searchNewDataInAfter["  + " . $keyAfter] =
+            $volAfter == is_bool($volAfter) ? " " . json_encode($volAfter) : " " . $volAfter;
         }
     }
 
