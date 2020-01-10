@@ -5,17 +5,29 @@ namespace Differ\Tests;
 use PHPUnit\Framework\TestCase;
 
 use function Differ\differ\genDiff\genDiff;
+use function Differ\differ\Yamlic\parseYml;
 
 class DifferTest extends TestCase
 {
-    public function testGetDiff()
+    public function testGetDiffJson()
     {
-        $correctDiff = file_get_contents(__DIR__ . '/fixtures/correctJsonDiff');
-        $inCorrectDiff = "{incorrect:json}";
-        $path1 = __DIR__ . "/../before.json";
-        $path2 = __DIR__ . "/../after.json";
-        $result1 = genDiff($path1, $path2);
-        $this->assertSame($correctDiff, $result1);
-        $this->assertNotSame($inCorrectDiff, $result1);
+        $correctDiffJson = file_get_contents(__DIR__ . '/fixtures/correctJsonDiff');
+        $inCorrectDiffJson = "{incorrect:json}";
+        $beforeJson = __DIR__ . "/../before.json";
+        $afterJson = __DIR__ . "/../after.json";
+        $result1 = genDiff($beforeJson, $afterJson);
+        $this->assertSame($correctDiffJson, $result1);
+        $this->assertNotSame($inCorrectDiffJson, $result1);
+    }
+
+    public function testGetDiffYml()
+    {
+        $correctDiffYml = file_get_contents(__DIR__ . '/fixtures/correctYmlDiff');
+        $inCorrectDiffYml = "{incorrect:json}";
+        $beforeYml = "before.yml";
+        $afterYml = "after.yml";
+        $result1 = parseYml($beforeYml, $afterYml);
+        $this->assertSame($correctDiffYml, $result1);
+        $this->assertNotSame($inCorrectDiffYml, $result1);
     }
 }

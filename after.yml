@@ -1,7 +1,8 @@
 {
+    "testings": "testing",
     "timeout": 20,
     "verbose": true,
     "host": "hexlet.io",
     "file": "yml",
-    "testing": "testing"
+    
 }

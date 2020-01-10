@@ -37,12 +37,15 @@ $args = Docopt::handle($gendiff, $params);
 
 // print_r($args);
 if ($args->args["--format"] == "pretty") {
+  // $testWriteFromBinDiff = Differ\differ\Yamlic\parseYml($args->args["<firstFile>"], $args->args["<secondFile>"]);
+  // file_put_contents(__DIR__ . '/../testWriteFromBinDiffJson.yml', $testWriteFromBinDiff);
+
   print_r(Differ\differ\genDiff\genDiff($args->args["<firstFile>"], $args->args["<secondFile>"]));
 }
 if ($args->args["--format"] == "yml") {
 
-  $testWriteFromBinDiff = Differ\differ\Yamlic\parseYml($args->args["<firstFile>"], $args->args["<secondFile>"]);
-  file_put_contents(__DIR__ . '/../testWriteFromBinDiff.yml', $testWriteFromBinDiff);
+  // $testWriteFromBinDiff = Differ\differ\Yamlic\parseYml($args->args["<firstFile>"], $args->args["<secondFile>"]);
+  // file_put_contents(__DIR__ . '/../testWriteFromBinDiffYml.yml', $testWriteFromBinDiff);
   
   print_r(Differ\differ\Yamlic\parseYml($args->args["<firstFile>"], $args->args["<secondFile>"]));
 }

@@ -56,7 +56,7 @@ function parseYml($yaml1, $yaml2)
     $searchNewDataInYml2 = [];
     foreach ($yaml2 as $key2 => $vol2) {
         if (!array_key_exists("    " . $key2, $compareYml1InYml2)) {
-            $searchNewDataInYml2["  + " . $key2] = " " . json_encode($vol2);
+            $searchNewDataInYml2["  + " . $key2] = " " . $vol2 = is_bool($vol2) ? json_encode($vol2) : $vol2;
         }
     }
 

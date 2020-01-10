@@ -62,7 +62,7 @@ function genDiff($beforeJson, $afterJson)
     $searchNewDataInJson2 = [];
     foreach ($afterJson as $key2 => $vol2) {
         if (!array_key_exists("    " . $key2, $compareJson1InJson2)) {
-            $searchNewDataInJson2["  + " . $key2] = " " . json_encode($vol2);
+            $searchNewDataInJson2["  + " . $key2] = " " . $vol2 = is_bool($vol2) ? json_encode($vol2) : $vol2;
         }
     }
 
