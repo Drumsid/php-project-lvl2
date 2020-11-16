@@ -41,6 +41,7 @@ if ($args->args["--format"] == "pretty") {
   // file_put_contents(__DIR__ . '/../testWriteFromBinDiffJson.yml', $testWriteFromBinDiff);
 
   print_r(Differ\differ\genDiff\genDiff($args->args["<firstFile>"], $args->args["<secondFile>"]));
+  // print_r(__DIR__);
 }
 if ($args->args["--format"] == "yml") {
 

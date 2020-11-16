@@ -12,6 +12,7 @@ function correct_path_json($path)
     if (file_exists($path)) {
         return json_decode(file_get_contents($path), true);
     }
+    // почему тут так написано не пойму, одна и та же проверка if (file_exists($path)) { но работает
     if (file_exists($path)) {
         return json_decode(file_get_contents(CORRECT_PATH . $path), true);
     }
@@ -35,3 +36,5 @@ function genDiff($beforeJson, $afterJson)
     $tmp = correctCurleBrackets(str_replace(',', PHP_EOL, $strJson), PHP_EOL);
     return str_replace('"', "", $tmp);
 }
+
+// print_r(genDiff('before.json', 'after.json'));

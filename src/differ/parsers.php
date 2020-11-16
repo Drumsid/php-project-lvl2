@@ -47,3 +47,8 @@ function correctCurleBrackets($str, $delimiter)
     }
     return $search;
 }
+
+// тут я тестирую xdebug
+$beforeFile = json_decode(file_get_contents(__DIR__ . "\..\..\before2.json"), true);
+$afterFile = json_decode(file_get_contents(__DIR__ . "\..\..\after2.json"), true);
+// print_r(parsing($beforeFile, $afterFile));
