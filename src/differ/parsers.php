@@ -2,7 +2,15 @@
 
 namespace Differ\differ\Parsers;
 
-function parsing($beforeFile, $afterFile)
+// $autoloadPath1 = __DIR__ . '\..\..\..\autoload.php';
+// $autoloadPath2 = __DIR__ . '\..\..\vendor\autoload.php';
+// if (file_exists($autoloadPath1)) {
+//     require_once $autoloadPath1;
+// } else {
+//     require_once $autoloadPath2;
+// }
+
+function parsing($beforeFile, $afterFile) // old function
 {
     $compareBeforeInAfter = [];
     foreach ($beforeFile as $keyBefore => $volBefore) {
@@ -33,7 +41,7 @@ function parsing($beforeFile, $afterFile)
     return $strJson;
 }
 
-function correctCurleBrackets($str, $delimiter)
+function correctCurleBrackets($str, $delimiter) // old function
 {
     $search = "";
     for ($i = 0; $i < strlen($str); $i++) {
@@ -48,7 +56,105 @@ function correctCurleBrackets($str, $delimiter)
     return $search;
 }
 
+function deepDiff($arrBefore, $arrAfter, $acc = [])
+{
+    foreach ($arrBefore as $keyBefore => $valBefore) {
+        foreach ($arrAfter as $keyAfter => $valAfter) {
+            if (array_key_exists($keyBefore, $arrAfter)) {
+              // равны ли ключи
+                if ($keyBefore == $keyAfter && is_array($valBefore) && is_array($valAfter)) {
+                    $acc[$keyBefore] = deepDiff($valBefore, $valAfter);
+                } elseif ($keyBefore == $keyAfter && $valBefore == $valAfter) {
+                    $acc[$keyBefore] = ['value' => $valBefore, 'status' => 'dontChange'];
+                    break;
+                } elseif ($keyBefore == $keyAfter && $valBefore != $valAfter) {
+                    // $valAfter = is_bool($valAfter) || is_null($valAfter) ? boolOrNullToString($valAfter) : $valAfter;
+                    $valAfter = boolOrNullToString($valAfter);
+                    // $valBefore = is_bool($valBefore) || is_null($valBefore) ? boolOrNullToString($valBefore) : $valBefore;
+                    $valBefore = boolOrNullToString($valBefore);
+                    $acc[$keyBefore] = ['beforeValue' => $valBefore, 'afterValue' => $valAfter, 'skip' => true];
+                    break;
+                }
+            } else {
+                $valBefore = boolOrNullToString($valBefore);
+                $acc[$keyBefore] = ['value' => $valBefore, 'status' => 'removed', 'skip' => true];
+                break;
+            }
+        }
+    }
+    foreach ($arrAfter as $keyAfter => $valAfter) {
+        if (! array_key_exists($keyAfter, $arrBefore)) {
+            // $valAfter = is_bool($valAfter) || is_null($valAfter) ? boolOrNullToString($valAfter) : $valAfter;
+            $valAfter =  boolOrNullToString($valAfter);
+            $acc[$keyAfter] = ['value' => $valAfter, 'status' => 'added', 'skip' => true];
+        }
+    }
+    ksort($acc);
+    return $acc;
+    // return sortArr($acc);
+}
+
+function xDif($diff)
+{
+    $res = [];
+    foreach ($diff as $key => $array) {
+        if (is_array($array) && is_array(reset($array)) && ! array_key_exists('skip', $array) /*&& ! array_key_exists('beforeValue', $array)*/) {
+            $res[$key] = xDif($array);
+        } else {
+            if (array_key_exists('status', $array) && $array['status'] == 'dontChange') {
+                $res['    ' . $key] = $array['value'];
+            } elseif (array_key_exists('status', $array) && $array['status'] == 'removed') {
+                $res['  - ' . $key] = $array['value'];
+            } elseif (array_key_exists('status', $array) && $array['status'] == 'added') {
+                $res['  + ' . $key] = $array['value'];
+            } elseif (array_key_exists('beforeValue', $array) && array_key_exists('afterValue', $array)) {
+                $res['  - ' . $key] = $array['beforeValue'];
+                $res['  + ' . $key] = $array['afterValue'];
+            }
+        }
+    }
+    return $res;
+}
+
+function boolOrNullToString($data)
+{
+    if (is_null($data)) {
+        return 'null';
+    }
+    if (is_bool($data) && $data === true) {
+        return 'true';
+    }
+    if (is_bool($data) && $data === false) {
+        return 'false';
+    }
+    return $data;
+}
+
+function formatic($arr) // без глобал не работает, не пойму почему
+{
+    $deep = 0;
+    function niceView($arr, $deep = 0)
+    {
+        global $deep;
+        $sep = str_repeat('    ', $deep);
+        $res = "{\n";
+        foreach ($arr as $key => $val) {
+            if (is_array($val)) {
+                $tmp = niceView($val, $deep += 1);
+                $res .= $sep . $key . " : " . $tmp;
+            } else {
+                $res .= $sep . $key . " : " . $val . "\n";
+            }
+        }
+        if ($deep > 1) {
+            $deep = 0;
+            return $res . $sep . "}\n";
+        }
+        return $res . $sep . "}\n";
+    }
+    return niceView($arr);
+}
 // тут я тестирую xdebug
-$beforeFile = json_decode(file_get_contents(__DIR__ . "\..\..\before2.json"), true);
-$afterFile = json_decode(file_get_contents(__DIR__ . "\..\..\after2.json"), true);
-// print_r(parsing($beforeFile, $afterFile));
+// $beforeFile = json_decode(file_get_contents(__DIR__ . "\..\..\before2.json"), true);
+// $afterFile = json_decode(file_get_contents(__DIR__ . "\..\..\after2.json"), true);
+// print_r(formatic(xDif(deepDiff((array) $beforeFile, (array) $afterFile))));

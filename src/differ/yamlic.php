@@ -6,6 +6,10 @@ use Symfony\Component\Yaml\Yaml;
 
 use function Differ\differ\Parsers\parsing;
 use function Differ\differ\Parsers\correctCurleBrackets;
+use function Differ\differ\Parsers\deepDiff;
+use function Differ\differ\Parsers\xDif;
+use function Differ\differ\Parsers\boolOrNullToString;
+use function Differ\differ\Parsers\formatic;
 
 const CORRECT_PATH_YAML = __DIR__ . "/../../";
 
@@ -30,20 +34,27 @@ function correct_path_yml($path)
 
 function parseYml($beforeYml, $afterYml)
 {
-    $beforeYml = correct_path_yml($beforeYml);
-    $afterYml = correct_path_yml($afterYml);
+    $beforeYml = json_encode(correct_path_yml($beforeYml));
+    $afterYml = json_encode(correct_path_yml($afterYml));
 
-    if (! is_object($beforeYml)) {
+    $beforeYml = json_decode($beforeYml, true);
+    $afterYml = json_decode($afterYml, true);
+    
+    if (! is_array($beforeYml)) {
         return "{$beforeYml} file not exists or path incorrect\n";
     }
-    if (! is_object($afterYml)) {
+    if (! is_array($afterYml)) {
         return "{$afterYml} file not exists or path incorrect\n";
     }
 
-    $strJson = parsing($beforeYml, $afterYml);
 
-    $tmp = correctCurleBrackets(str_replace(',', PHP_EOL, $strJson), PHP_EOL);
-    return str_replace('"', "", $tmp);
+    // $strJson = parsing($beforeYml, $afterYml);
+
+    // $tmp = correctCurleBrackets(str_replace(',', PHP_EOL, $strJson), PHP_EOL);
+    // return str_replace('"', "", $tmp);
+    $strJson = deepDiff($beforeYml, $afterYml);
+    // print_r($strJson);
+    return formatic(xDif($strJson));
 }
 
 // print_r(parseYml("before.yml", "after.yml"));
