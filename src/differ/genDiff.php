@@ -12,19 +12,11 @@ use function Differ\differ\Parsers\formatic;
 
 const CORRECT_PATH = __DIR__ . "/../";
 
-function correct_path_json($path) //эту функцию надо писать заново
+function correct_path_json($path)
 {
-    // print_r(__DIR__);
     if (file_exists($path)) {
-        // print_r($path . "1\n");
         return json_decode(file_get_contents($path), true);
     }
-    // почему тут так написано не пойму, одна и та же проверка if (file_exists($path))  но работает
-    if (file_exists($path)) {
-        // print_r($path . "2\n");
-        return json_decode(file_get_contents(CORRECT_PATH . $path), true);
-    }
-    // print_r($path . "3\n");
     return $path;
 }
 
@@ -40,15 +32,8 @@ function genDiff($beforeJson, $afterJson)
         return "{$afterJson} file not exists or path incorrect\n";
     }
 
-    // $strJson = parsing($beforeJson, $afterJson);
     $strJson = deepDiff($beforeJson, $afterJson);
     return formatic(xDif($strJson));
-
-    // $tmp = correctCurleBrackets(str_replace(',', PHP_EOL, $strJson), PHP_EOL);
-    // return str_replace('"', "", $tmp);
-
-
-
 }
 
 // print_r(genDiff('before.json', 'after.json'));

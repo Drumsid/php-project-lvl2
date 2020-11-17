@@ -26,9 +26,6 @@ function correct_path_yml($path)
     if (file_exists($path)) {
         return Yaml::parseFile($path, Yaml::PARSE_OBJECT_FOR_MAP);
     }
-    if (file_exists($path)) {
-        return Yaml::parseFile(CORRECT_PATH_YAML . $path, Yaml::PARSE_OBJECT_FOR_MAP);
-    }
     return $path;
 }
 
@@ -47,13 +44,7 @@ function parseYml($beforeYml, $afterYml)
         return "{$afterYml} file not exists or path incorrect\n";
     }
 
-
-    // $strJson = parsing($beforeYml, $afterYml);
-
-    // $tmp = correctCurleBrackets(str_replace(',', PHP_EOL, $strJson), PHP_EOL);
-    // return str_replace('"', "", $tmp);
     $strJson = deepDiff($beforeYml, $afterYml);
-    // print_r($strJson);
     return formatic(xDif($strJson));
 }
 
