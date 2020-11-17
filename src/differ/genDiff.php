@@ -9,7 +9,6 @@ use function Differ\differ\Parsers\xDif;
 use function Differ\differ\Parsers\boolOrNullToString;
 use function Differ\differ\Parsers\formatic;
 
-
 const CORRECT_PATH = __DIR__ . "/../";
 
 function correct_path_json($path)

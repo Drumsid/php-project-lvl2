@@ -133,26 +133,27 @@ function boolOrNullToString($data)
 function formatic($arr) // без глобал не работает, не пойму почему
 {
     $deep = 0;
-    function niceView($arr, $deep = 0)
-    {
-        global $deep;
-        $sep = str_repeat('    ', $deep);
-        $res = "{\n";
-        foreach ($arr as $key => $val) {
-            if (is_array($val)) {
-                $tmp = niceView($val, $deep += 1);
-                $res .= $sep . $key . " : " . $tmp;
-            } else {
-                $res .= $sep . $key . " : " . $val . "\n";
-            }
+
+    return niceView($arr);
+}
+function niceView($arr, $deep = 0) // unit test ругался на то что эту функцию обьявил внутри другой
+{
+    global $deep;
+    $sep = str_repeat('    ', $deep);
+    $res = "{\n";
+    foreach ($arr as $key => $val) {
+        if (is_array($val)) {
+            $tmp = niceView($val, $deep += 1);
+            $res .= $sep . $key . " : " . $tmp;
+        } else {
+            $res .= $sep . $key . " : " . $val . "\n";
         }
-        if ($deep > 1) {
-            $deep = 0;
-            return $res . $sep . "}\n";
-        }
+    }
+    if ($deep > 1) {
+        $deep = 0;
         return $res . $sep . "}\n";
     }
-    return niceView($arr);
+    return $res . $sep . "}\n";
 }
 // тут я тестирую xdebug
 // $beforeFile = json_decode(file_get_contents(__DIR__ . "\..\..\before2.json"), true);

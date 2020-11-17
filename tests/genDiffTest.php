@@ -13,8 +13,8 @@ class DifferTest extends TestCase
     {
         $correctDiffJson = file_get_contents(__DIR__ . '/fixtures/correctJsonDiff');
         $inCorrectDiffJson = "{incorrect:json}";
-        $beforeJson = __DIR__ . "/../before.json";
-        $afterJson = __DIR__ . "/../after.json";
+        $beforeJson = __DIR__ . "/../jsonTestFile/before.json";
+        $afterJson = __DIR__ . "/../jsonTestFile/after.json";
         $result1 = genDiff($beforeJson, $afterJson);
         $this->assertSame($correctDiffJson, $result1);
         $this->assertNotSame($inCorrectDiffJson, $result1);
@@ -24,8 +24,8 @@ class DifferTest extends TestCase
     {
         $correctDiffYml = file_get_contents(__DIR__ . '/fixtures/correctYmlDiff');
         $inCorrectDiffYml = "{incorrect:json}";
-        $beforeYml = "before.yml";
-        $afterYml = "after.yml";
+        $beforeYml = __DIR__ . "/../ymlTestFile/before.yml";
+        $afterYml = __DIR__ . "/../ymlTestFile/after.yml";
         $result1 = parseYml($beforeYml, $afterYml);
         $this->assertSame($correctDiffYml, $result1);
         $this->assertNotSame($inCorrectDiffYml, $result1);
