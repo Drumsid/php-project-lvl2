@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 use function Differ\differ\genDiff\genDiff;
 use function Differ\differ\Yamlic\parseYml;
 
-class DifferTest extends TestCase
+class GenDifferTest extends TestCase
 {
     public function testGetDiffJson()
     {
