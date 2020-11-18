@@ -30,4 +30,6 @@ jobs:
       - name: Run linter
         # Run Linter
         run: make lint
+      - name: Run unit Test
+        # Run unit Test
         run: make test
