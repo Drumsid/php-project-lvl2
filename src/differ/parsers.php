@@ -68,9 +68,7 @@ function deepDiff($arrBefore, $arrAfter, $acc = [])
                     $acc[$keyBefore] = ['value' => $valBefore, 'status' => 'dontChange'];
                     break;
                 } elseif ($keyBefore == $keyAfter && $valBefore != $valAfter) {
-                    // $valAfter = is_bool($valAfter) || is_null($valAfter) ? boolOrNullToString($valAfter) : $valAfter;
                     $valAfter = boolOrNullToString($valAfter);
-                    // $valBefore = is_bool($valBefore) || is_null($valBefore) ? boolOrNullToString($valBefore) : $valBefore;
                     $valBefore = boolOrNullToString($valBefore);
                     $acc[$keyBefore] = ['beforeValue' => $valBefore, 'afterValue' => $valAfter, 'skip' => true];
                     break;
@@ -98,7 +96,7 @@ function xDif($diff)
 {
     $res = [];
     foreach ($diff as $key => $array) {
-        if (is_array($array) && is_array(reset($array)) && ! array_key_exists('skip', $array) /*&& ! array_key_exists('beforeValue', $array)*/) {
+        if (is_array($array) && is_array(reset($array)) && ! array_key_exists('skip', $array)) {
             $res[$key] = xDif($array);
         } else {
             if (array_key_exists('status', $array) && $array['status'] == 'dontChange') {

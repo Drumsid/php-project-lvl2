@@ -36,7 +36,7 @@ function parseYml($beforeYml, $afterYml)
 
     $beforeYml = json_decode($beforeYml, true);
     $afterYml = json_decode($afterYml, true);
-    
+
     if (! is_array($beforeYml)) {
         return "{$beforeYml} file not exists or path incorrect\n";
     }
