@@ -7,7 +7,10 @@ function deepDiff($beforeTree, $afterTree, $res = [])
     foreach ($beforeTree as $beforeValue) {
         $findName = findSameName($beforeValue, $afterTree);
         if ($findName) {
-            if (($beforeValue['name'] == $findName['name']) && array_key_exists('type', $findName) && $findName['type'] == 'parent') {
+            if (
+                ($beforeValue['name'] == $findName['name']) && array_key_exists('type', $findName) &&
+                $findName['type'] == 'parent'
+            ) {
                 $beforeValue['value'] = deepDiff($beforeValue['value'], $findName['value']);
                 $res[] = $beforeValue;
             } elseif (($beforeValue['name'] == $findName['name']) && ($beforeValue['value'] == $findName['value'])) {
@@ -49,20 +52,20 @@ function deepDiff($beforeTree, $afterTree, $res = [])
     return $res;
 }
 
-function correctStruktures($arr){
-  if (! is_array($arr) || (array_key_exists('type', $arr) && $v['type'] == 'skip')) {
-    return $arr;
-  }  
-  $res = [];
-  foreach ($arr as $v) {
-        if (is_array($v) && array_key_exists('type', $v) && $v['type'] == 'parent'){
-        $res["    " . $v['name']] = correctStruktures($v['value']); 
+function correctStruktures($arr)
+{
+    if (! is_array($arr) || (array_key_exists('type', $arr) && $v['type'] == 'skip')) {
+        return $arr;
+    }
+    $res = [];
+    foreach ($arr as $v) {
+        if (is_array($v) && array_key_exists('type', $v) && $v['type'] == 'parent') {
+            $res["    " . $v['name']] = correctStruktures($v['value']);
         } else {
             $res["    " . $v['name']] = $v['value'];
         }
     }
-    
-  return $res;
+    return $res;
 }
 
 function xDif($diff)
@@ -87,7 +90,7 @@ function xDif($diff)
     return $res;
 }
 
-function niceView($arr, $deep = 0) 
+function niceView($arr, $deep = 0)
 {
     $sep = str_repeat('    ', $deep);
     $res = "{\n";
