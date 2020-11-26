@@ -37,7 +37,7 @@ $args = Docopt::handle($gendiff, $params);
 
 // print_r($args);
 if ($args->args["--format"] == "pretty") {
-  // $testWriteFromBinDiff = Differ\differ\Yamlic\parseYml($args->args["<firstFile>"], $args->args["<secondFile>"]);
+  // $testWriteFromBinDiff = Differ\differ\genDiff\genDiff($args->args["<firstFile>"], $args->args["<secondFile>"]);
   // file_put_contents(__DIR__ . '/../testWriteFromBinDiffJson.yml', $testWriteFromBinDiff);
 
   print_r(Differ\differ\genDiff\genDiff($args->args["<firstFile>"], $args->args["<secondFile>"]));

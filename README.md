@@ -9,6 +9,6 @@
 
 [![asciicast](https://asciinema.org/a/eoqqpcfWpSkoG7CqDMiz2H5pI.svg)](https://asciinema.org/a/eoqqpcfWpSkoG7CqDMiz2H5pI)
 
-### Спавнение yml файлов
+### Сравнение yml файлов
 
 [![asciicast](https://asciinema.org/a/UUUy9IuKJjNLAyQNLGtplprNH.svg)](https://asciinema.org/a/UUUy9IuKJjNLAyQNLGtplprNH)

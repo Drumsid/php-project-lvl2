@@ -135,9 +135,15 @@ function boolOrNullToString($data)
 
 function findSameName($findArr, $dataArrs)
 {
+    if (! is_array($findArr) || ! is_array($dataArrs)) {
+      return false;
+    }
+    if (! array_key_exists('name', $findArr)) {
+      return false;
+    }
     ['name' => $findName] = $findArr;
     foreach ($dataArrs as $dataArr) {
-        if ($findName == $dataArr['name']) {
+        if (is_array($dataArr) && array_key_exists('name', $dataArr) && $findName == $dataArr['name']) {
             return $dataArr;
         }
     }

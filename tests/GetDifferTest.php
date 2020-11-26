@@ -7,11 +7,11 @@ use PHPUnit\Framework\TestCase;
 use function Differ\differ\genDiff\genDiff;
 use function Differ\differ\Yamlic\parseYml;
 
-class GenDifferTest extends TestCase
+class GetDifferTest extends TestCase
 {
     public function testGetDiffJson()
     {
-        $correctDiffJson = file_get_contents(__DIR__ . '/fixtures/correctJsonDiff');
+        $correctDiffJson = file_get_contents(__DIR__ . '/fixtures/json/correctSimpleJson');
         $inCorrectDiffJson = "{incorrect:json}";
         $beforeJson = __DIR__ . "/../jsonTestFile/before.json";
         $afterJson = __DIR__ . "/../jsonTestFile/after.json";
@@ -22,7 +22,7 @@ class GenDifferTest extends TestCase
 
     public function testGetDiffYml()
     {
-        $correctDiffYml = file_get_contents(__DIR__ . '/fixtures/correctYmlDiff');
+        $correctDiffYml = file_get_contents(__DIR__ . '/fixtures/yml/correctSimpleYml');
         $inCorrectDiffYml = "{incorrect:json}";
         $beforeYml = __DIR__ . "/../ymlTestFile/before.yml";
         $afterYml = __DIR__ . "/../ymlTestFile/after.yml";
