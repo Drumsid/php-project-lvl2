@@ -5,7 +5,7 @@ namespace Differ\differ\genDiff;
 use function Differ\differ\Parsers\deepDiff;
 use function Differ\differ\Parsers\xDif;
 use function Differ\differ\Parsers\boolOrNullToString;
-use function Differ\differ\Parsers\niceView;
+use function Differ\differ\Parsers\stylish;
 use function Differ\differ\Parsers\transformToArr;
 
 const CORRECT_PATH = __DIR__ . "/../";
@@ -33,7 +33,7 @@ function genDiff($beforeJson, $afterJson)
     $afterJson = transformToArr($afterJson);
 
     $strJson = deepDiff($beforeJson, $afterJson);
-    return niceView(xDif($strJson));
+    return stylish(xDif($strJson));
 }
 
 // print_r(genDiff('before.json', 'after.json'));

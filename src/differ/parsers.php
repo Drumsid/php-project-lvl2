@@ -90,13 +90,13 @@ function xDif($diff)
     return $res;
 }
 
-function niceView($arr, $deep = 0)
+function stylish($arr, $deep = 0)
 {
     $sep = str_repeat('    ', $deep);
     $res = "{\n";
     foreach ($arr as $key => $val) {
         if (is_array($val)) {
-            $tmp = niceView($val, $deep + 1);
+            $tmp = stylish($val, $deep + 1);
             $res .= $sep . $key . " : " . $tmp;
         } else {
             $res .= $sep . $key . " : " . $val . "\n";

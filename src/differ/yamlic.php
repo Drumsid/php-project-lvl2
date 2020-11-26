@@ -8,7 +8,7 @@ use function Differ\differ\Parsers\transformToArr;
 use function Differ\differ\Parsers\deepDiff;
 use function Differ\differ\Parsers\xDif;
 use function Differ\differ\Parsers\boolOrNullToString;
-use function Differ\differ\Parsers\niceView;
+use function Differ\differ\Parsers\stylish;
 
 const CORRECT_PATH_YAML = __DIR__ . "/../../";
 
@@ -36,7 +36,7 @@ function parseYml($beforeYml, $afterYml)
     $afterYml = transformToArr($afterYml);
 
     $strJson = deepDiff($beforeYml, $afterYml);
-    return niceView(xDif($strJson));
+    return stylish(xDif($strJson));
 }
 
 // print_r(parseYml("before.yml", "after.yml"));
