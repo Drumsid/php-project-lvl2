@@ -4,22 +4,13 @@ namespace Differ\differ\Yamlic;
 
 use Symfony\Component\Yaml\Yaml;
 
-use function Differ\differ\Parsers\parsing;
-use function Differ\differ\Parsers\correctCurleBrackets;
+use function Differ\differ\Parsers\transformToArr;
 use function Differ\differ\Parsers\deepDiff;
 use function Differ\differ\Parsers\xDif;
 use function Differ\differ\Parsers\boolOrNullToString;
-use function Differ\differ\Parsers\formatic;
+use function Differ\differ\Parsers\niceView;
 
 const CORRECT_PATH_YAML = __DIR__ . "/../../";
-
-// $autoloadPath1 = __DIR__ . '/../../autoload.php';    // без этой записи в bin/gendiff функция parseYml работает
-// $autoloadPath2 = __DIR__ . '/../../vendor/autoload.php';  // но если без этой записи вызвать
-// if (file_exists($autoloadPath1)) {                       // в этом файле функцию parseYml - ошибка
-//     require_once $autoloadPath1;
-// } else {
-//     require_once $autoloadPath2;
-// }
 
 function correct_path_yml($path)
 {
@@ -31,21 +22,21 @@ function correct_path_yml($path)
 
 function parseYml($beforeYml, $afterYml)
 {
-    $beforeYml = json_encode(correct_path_yml($beforeYml));
-    $afterYml = json_encode(correct_path_yml($afterYml));
+    $beforeYml = correct_path_yml($beforeYml);
+    $afterYml = correct_path_yml($afterYml);
 
-    $beforeYml = json_decode($beforeYml, true);
-    $afterYml = json_decode($afterYml, true);
-
-    if (! is_array($beforeYml)) {
+    if (! is_object($beforeYml)) {
         return "{$beforeYml} file not exists or path incorrect\n";
     }
-    if (! is_array($afterYml)) {
+    if (! is_object($afterYml)) {
         return "{$afterYml} file not exists or path incorrect\n";
     }
 
+    $beforeYml = transformToArr($beforeYml);
+    $afterYml = transformToArr($afterYml);
+
     $strJson = deepDiff($beforeYml, $afterYml);
-    return formatic(xDif($strJson));
+    return niceView(xDif($strJson));
 }
 
 // print_r(parseYml("before.yml", "after.yml"));

@@ -2,113 +2,115 @@
 
 namespace Differ\differ\Parsers;
 
-// $autoloadPath1 = __DIR__ . '\..\..\..\autoload.php';
-// $autoloadPath2 = __DIR__ . '\..\..\vendor\autoload.php';
-// if (file_exists($autoloadPath1)) {
-//     require_once $autoloadPath1;
-// } else {
-//     require_once $autoloadPath2;
-// }
-
-function parsing($beforeFile, $afterFile) // old function
+function deepDiff($beforeTree, $afterTree, $res = [])
 {
-    $compareBeforeInAfter = [];
-    foreach ($beforeFile as $keyBefore => $volBefore) {
-        foreach ($afterFile as $keyAfter => $volAfter) {
-            if (array_key_exists($keyBefore, $afterFile)) {
-                if ($keyBefore == $keyAfter && $volBefore == $volAfter) {
-                    $compareBeforeInAfter["    " . $keyBefore] = " " . $volBefore;
+    foreach ($beforeTree as $beforeValue) {
+        $findName = findSameName($beforeValue, $afterTree);
+        if ($findName) {
+            if (($beforeValue['name'] == $findName['name']) && array_key_exists('type', $findName) && $findName['type'] == 'parent') {
+                $beforeValue['value'] = deepDiff($beforeValue['value'], $findName['value']);
+                $res[] = $beforeValue;
+            } elseif (($beforeValue['name'] == $findName['name']) && ($beforeValue['value'] == $findName['value'])) {
+                $beforeValue['status'] = 'dontChange';
+                $res[] = $beforeValue;
+            } elseif (($beforeValue['name'] == $findName['name']) && ($beforeValue['value'] != $findName['value'])) {
+                $beforeValue['status'] = 'changed';
+                $beforeValue['beforeValue'] = $beforeValue['value'];
+                $beforeValue['afterValue'] = $findName['value'];
+                if (array_key_exists('type', $beforeValue)) {
+                    $beforeValue['type'] = 'skip';
                 }
-                if ($keyBefore == $keyAfter && $volBefore != $volAfter) {
-                    $compareBeforeInAfter["  + " . $keyAfter] = " " . $volAfter;
-                    $compareBeforeInAfter["  - " . $keyBefore] = " " . $volBefore;
-                }
-            } else {
-                $compareBeforeInAfter["  - " . $keyBefore] = " " . $volBefore;
+                $res[] = $beforeValue;
             }
+        } else {
+            $beforeValue['status'] = 'removed';
+            if (array_key_exists('type', $beforeValue)) {
+                $beforeValue['type'] = 'skip';
+            }
+            $res[] = $beforeValue;
         }
     }
-
-    $searchNewDataInAfter = [];
-    foreach ($afterFile as $keyAfter => $volAfter) {
-        if (!array_key_exists("    " . $keyAfter, $compareBeforeInAfter)) {
-            $searchNewDataInAfter["  + " . $keyAfter] =
-            $volAfter == is_bool($volAfter) ? " " . json_encode($volAfter) : " " . $volAfter;
+    foreach ($afterTree as $aftervalue) {
+        $findName = findSameName($aftervalue, $beforeTree);
+        if (! $findName) {
+            $aftervalue['status'] = 'added';
+            if (array_key_exists('type', $aftervalue)) {
+                $aftervalue['type'] = 'skip';
+            }
+            $res[] = $aftervalue;
         }
     }
-
-    $strJson = json_encode(array_merge($compareBeforeInAfter, $searchNewDataInAfter));
-    return $strJson;
+    usort($res, function ($item1, $item2) {
+        if ($item1['name'] == $item2['name']) {
+            return 0;
+        }
+        return ($item1['name'] < $item2['name']) ? -1 : 1;
+    });
+    return $res;
 }
 
-function correctCurleBrackets($str, $delimiter) // old function
-{
-    $search = "";
-    for ($i = 0; $i < strlen($str); $i++) {
-        $search .= $str[$i];
-        if ($i == 0) {
-            $search .= $delimiter;
-        }
-        if ($i == strlen($str) - 2) {
-            $search .= $delimiter;
-        }
-    }
-    return $search;
-}
-
-function deepDiff($arrBefore, $arrAfter, $acc = [])
-{
-    foreach ($arrBefore as $keyBefore => $valBefore) {
-        foreach ($arrAfter as $keyAfter => $valAfter) {
-            if (array_key_exists($keyBefore, $arrAfter)) {
-              // равны ли ключи
-                if ($keyBefore == $keyAfter && is_array($valBefore) && is_array($valAfter)) {
-                    $acc[$keyBefore] = deepDiff($valBefore, $valAfter);
-                } elseif ($keyBefore == $keyAfter && $valBefore == $valAfter) {
-                    $acc[$keyBefore] = ['value' => $valBefore, 'status' => 'dontChange'];
-                    break;
-                } elseif ($keyBefore == $keyAfter && $valBefore != $valAfter) {
-                    $valAfter = boolOrNullToString($valAfter);
-                    $valBefore = boolOrNullToString($valBefore);
-                    $acc[$keyBefore] = ['beforeValue' => $valBefore, 'afterValue' => $valAfter, 'skip' => true];
-                    break;
-                }
-            } else {
-                $valBefore = boolOrNullToString($valBefore);
-                $acc[$keyBefore] = ['value' => $valBefore, 'status' => 'removed', 'skip' => true];
-                break;
-            }
+function correctStruktures($arr){
+  if (! is_array($arr) || (array_key_exists('type', $arr) && $v['type'] == 'skip')) {
+    return $arr;
+  }  
+  $res = [];
+  foreach ($arr as $v) {
+        if (is_array($v) && array_key_exists('type', $v) && $v['type'] == 'parent'){
+        $res["    " . $v['name']] = correctStruktures($v['value']); 
+        } else {
+            $res["    " . $v['name']] = $v['value'];
         }
     }
-    foreach ($arrAfter as $keyAfter => $valAfter) {
-        if (! array_key_exists($keyAfter, $arrBefore)) {
-            // $valAfter = is_bool($valAfter) || is_null($valAfter) ? boolOrNullToString($valAfter) : $valAfter;
-            $valAfter =  boolOrNullToString($valAfter);
-            $acc[$keyAfter] = ['value' => $valAfter, 'status' => 'added', 'skip' => true];
-        }
-    }
-    ksort($acc);
-    return $acc;
-    // return sortArr($acc);
+    
+  return $res;
 }
 
 function xDif($diff)
 {
     $res = [];
-    foreach ($diff as $key => $array) {
-        if (is_array($array) && is_array(reset($array)) && ! array_key_exists('skip', $array)) {
-            $res[$key] = xDif($array);
+    foreach ($diff as $array) {
+        if (array_key_exists('type', $array) && $array['type'] == 'parent') {
+            $res['    ' . $array['name']] = xDif($array['value']);
         } else {
             if (array_key_exists('status', $array) && $array['status'] == 'dontChange') {
-                $res['    ' . $key] = $array['value'];
+                $res['    ' . $array['name']] = $array['value'];
             } elseif (array_key_exists('status', $array) && $array['status'] == 'removed') {
-                $res['  - ' . $key] = $array['value'];
+                $res['  - ' . $array['name']] = correctStruktures($array['value']);
             } elseif (array_key_exists('status', $array) && $array['status'] == 'added') {
-                $res['  + ' . $key] = $array['value'];
-            } elseif (array_key_exists('beforeValue', $array) && array_key_exists('afterValue', $array)) {
-                $res['  - ' . $key] = $array['beforeValue'];
-                $res['  + ' . $key] = $array['afterValue'];
+                $res['  + ' . $array['name']] = correctStruktures($array['value']);
+            } elseif (array_key_exists('status', $array) && $array['status'] == 'changed') {
+                $res['  - ' . $array['name']] = correctStruktures($array['beforeValue']);
+                $res['  + ' . $array['name']] = correctStruktures($array['afterValue']);
             }
+        }
+    }
+    return $res;
+}
+
+function niceView($arr, $deep = 0) 
+{
+    $sep = str_repeat('    ', $deep);
+    $res = "{\n";
+    foreach ($arr as $key => $val) {
+        if (is_array($val)) {
+            $tmp = niceView($val, $deep + 1);
+            $res .= $sep . $key . " : " . $tmp;
+        } else {
+            $res .= $sep . $key . " : " . $val . "\n";
+        }
+    }
+    return $res . $sep . "}\n";
+}
+
+function transformToArr($tree)
+{
+    $res = [];
+
+    foreach ($tree as $key => $val) {
+        if (is_object($val)) {
+            $res[] = ['name' => $key,  'type' => 'parent', 'value' => transformToArr($val)];
+        } else {
+            $res[] = ['name' => $key, 'value' => boolOrNullToString($val)];
         }
     }
     return $res;
@@ -128,30 +130,15 @@ function boolOrNullToString($data)
     return $data;
 }
 
-function formatic($arr) // без глобал не работает, не пойму почему
+function findSameName($findArr, $dataArrs)
 {
-    $deep = 0;
-
-    return niceView($arr);
-}
-function niceView($arr, $deep = 0) // unit test ругался на то что эту функцию обьявил внутри другой
-{
-    global $deep;
-    $sep = str_repeat('    ', $deep);
-    $res = "{\n";
-    foreach ($arr as $key => $val) {
-        if (is_array($val)) {
-            $tmp = niceView($val, $deep += 1);
-            $res .= $sep . $key . " : " . $tmp;
-        } else {
-            $res .= $sep . $key . " : " . $val . "\n";
+    ['name' => $findName] = $findArr;
+    foreach ($dataArrs as $dataArr) {
+        if ($findName == $dataArr['name']) {
+            return $dataArr;
         }
     }
-    if ($deep > 1) {
-        $deep = 0;
-        return $res . $sep . "}\n";
-    }
-    return $res . $sep . "}\n";
+    return false;
 }
 // тут я тестирую xdebug
 // $beforeFile = json_decode(file_get_contents(__DIR__ . "\..\..\before2.json"), true);
