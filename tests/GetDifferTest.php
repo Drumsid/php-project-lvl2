@@ -26,7 +26,7 @@ class GetDifferTest extends TestCase
         $inCorrectDiffYml = "{incorrect:json}";
         $beforeYml = __DIR__ . "/../ymlTestFile/before.yml";
         $afterYml = __DIR__ . "/../ymlTestFile/after.yml";
-        $result2 = parseYml($beforeYml, $afterYml);
+        $result2 = genDiff($beforeYml, $afterYml);
         $this->assertSame($correctDiffYml, $result2);
         $this->assertNotSame($inCorrectDiffYml, $result2);
     }
