@@ -22,7 +22,7 @@ Usage:
 Options:
   -h --help                     Show this screen
   -v --version                  Show version
-  --format <fmt>                Report format [default: pretty]
+  --format <fmt>                Report format [default: stylish]
 DOC;
 
 $params = array(
@@ -37,10 +37,10 @@ $args = Docopt::handle($gendiff, $params);
 
 // print_r($args);
 // if ($args->args["--format"] == "pretty") {
-  // $testWriteFromBinDiff = Differ\differ\genDiff\genDiff($args->args["<firstFile>"], $args->args["<secondFile>"]);
-  // file_put_contents(__DIR__ . '/../testWriteFromBinDiffJson.yml', $testWriteFromBinDiff);
+  // $testWriteFromBinDiff = Differ\differ\genDiff\genDiff($args->args["<firstFile>"], $args->args["<secondFile>"], $args->args["--format"]);
+  // file_put_contents(__DIR__ . '/../tests/fixtures/plain/plainDiffYml', $testWriteFromBinDiff);
 
-  print_r(Differ\differ\genDiff\genDiff($args->args["<firstFile>"], $args->args["<secondFile>"]));
+print_r(Differ\differ\genDiff\genDiff($args->args["<firstFile>"], $args->args["<secondFile>"], $args->args["--format"]));
   // print_r(__DIR__);
 // }
 // if ($args->args["--format"] == "yml") {

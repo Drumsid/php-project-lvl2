@@ -5,7 +5,6 @@ namespace Differ\Tests;
 use PHPUnit\Framework\TestCase;
 
 use function Differ\differ\genDiff\genDiff;
-use function Differ\differ\Yamlic\parseYml;
 
 class GetDeepDifferTest extends TestCase
 {

@@ -5,20 +5,13 @@ namespace Differ\differ\genDiff;
 use Symfony\Component\Yaml\Yaml;
 
 use function Differ\differ\Parsers\deepDiff;
-use function Differ\differ\Parsers\xDif;
+use function Differ\formaters\Stylish\xDif;
 use function Differ\differ\Parsers\boolOrNullToString;
-use function Differ\differ\Parsers\stylish;
+use function Differ\formaters\Stylish\stylish;
 use function Differ\differ\Parsers\transformToArr;
+use function Differ\formaters\Plain\plain;
 
 const CORRECT_PATH = __DIR__ . "/../";
-
-function correct_path_json($path)
-{
-    if (file_exists($path)) {
-        return json_decode(file_get_contents($path));
-    }
-    return $path;
-}
 
 function checkExpansion($file)
 {
@@ -31,13 +24,11 @@ function checkExpansion($file)
     return $file;
 }
 
-function genDiff($beforeJson, $afterJson)
+function genDiff($beforeJson, $afterJson, $format = 'stylish')
 {
-    // $beforeJson = correct_path_json($beforeJson);
-    // $afterJson = correct_path_json($afterJson);
     $beforeJson = checkExpansion($beforeJson);
     $afterJson = checkExpansion($afterJson);
-// var_dump($beforeJson);
+
     if (! is_object($beforeJson)) {
         return "{$beforeJson} file not exists or path incorrect\n";
     }
@@ -48,6 +39,9 @@ function genDiff($beforeJson, $afterJson)
     $afterJson = transformToArr($afterJson);
 
     $strJson = deepDiff($beforeJson, $afterJson);
+    if ($format == 'plain') {
+        return plain($strJson);
+    }
     return stylish(xDif($strJson));
 }
 
