@@ -27,7 +27,8 @@
             "src/differ/yamlic.php",
             "src/differ/parsers.php",
             "src/formaters/stylish.php",
-            "src/formaters/plain.php"
+            "src/formaters/plain.php",
+            "src/formaters/json.php"
         ]
     }
 }

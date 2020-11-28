@@ -10,6 +10,7 @@ use function Differ\differ\Parsers\boolOrNullToString;
 use function Differ\formaters\Stylish\stylish;
 use function Differ\differ\Parsers\transformToArr;
 use function Differ\formaters\Plain\plain;
+use function Differ\formaters\Json\niceJsonView;
 
 const CORRECT_PATH = __DIR__ . "/../";
 
@@ -41,6 +42,9 @@ function genDiff($beforeJson, $afterJson, $format = 'stylish')
     $strJson = deepDiff($beforeJson, $afterJson);
     if ($format == 'plain') {
         return plain($strJson);
+    }
+    if ($format == 'json') {
+        return niceJsonView(xDif($strJson));
     }
     return stylish(xDif($strJson));
 }
