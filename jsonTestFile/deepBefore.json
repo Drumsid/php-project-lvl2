@@ -1,8 +1,5 @@
 {
-  "a": 1,
-  "b": 2,
-  "d": 3,
-    "common": {
+  "common": {
     "setting1": "Value 1",
     "setting2": 200,
     "setting3": true,
