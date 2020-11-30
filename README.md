@@ -12,3 +12,15 @@
 ### Сравнение yml файлов
 
 [![asciicast](https://asciinema.org/a/UUUy9IuKJjNLAyQNLGtplprNH.svg)](https://asciinema.org/a/UUUy9IuKJjNLAyQNLGtplprNH)
+
+### Сравнение вложенных json и yml файлов (рекурсивное сравнение) обычный вывод
+
+[![asciicast](https://asciinema.org/a/DCuxezsTgYXGGcfC8Blw12gNN.svg)](https://asciinema.org/a/DCuxezsTgYXGGcfC8Blw12gNN)
+
+### Сравнение вложенных json и yml файлов (рекурсивное сравнение) 'plain' вывод
+
+[![asciicast](https://asciinema.org/a/EcOGujN7pdnbHg1qN2UmgOg0X.svg)](https://asciinema.org/a/EcOGujN7pdnbHg1qN2UmgOg0X)
+
+### Сравнение вложенных json и yml файлов (рекурсивное сравнение) 'json' вывод
+
+[![asciicast](https://asciinema.org/a/boIKw1li2FTDPjb3ZC9oSV5cR.svg)](https://asciinema.org/a/boIKw1li2FTDPjb3ZC9oSV5cR)
