@@ -1,8 +1,6 @@
 #!/usr/bin/env php
 <?php
 
-const CORRECT_PATH = __DIR__ . "/";
-
 $autoloadPath1 = __DIR__ . '/../../../autoload.php';
 $autoloadPath2 = __DIR__ . '/../vendor/autoload.php';
 if (file_exists($autoloadPath1)) {
@@ -34,19 +32,4 @@ $params = array(
 
 $args = Docopt::handle($gendiff, $params);
 
-
-// print_r($args);
-// if ($args->args["--format"] == "pretty") {
-// $testWriteFromBinDiff = Differ\differ\genDiff\genDiff($args->args["<firstFile>"], $args->args["<secondFile>"], $args->args["--format"]);
-// file_put_contents(__DIR__ . '/../tests/fixtures/json/correctDeepYmlToJson', $testWriteFromBinDiff);
-
 print_r(Differ\differ\genDiff\genDiff($args->args["<firstFile>"], $args->args["<secondFile>"], $args->args["--format"]));
-// print_r(__DIR__);
-// }
-// if ($args->args["--format"] == "yml") {
-
-  // $testWriteFromBinDiff = Differ\differ\Yamlic\parseYml($args->args["<firstFile>"], $args->args["<secondFile>"]);
-  // file_put_contents(__DIR__ . '/../testWriteFromBinDiffYml.yml', $testWriteFromBinDiff);
-  
-//   print_r(Differ\differ\Yamlic\parseYml($args->args["<firstFile>"], $args->args["<secondFile>"]));
-// }
