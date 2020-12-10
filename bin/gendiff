@@ -1,5 +1,6 @@
 #!/usr/bin/env php
 <?php
+// start check project
 
 const CORRECT_PATH = __DIR__ . "/";
 
