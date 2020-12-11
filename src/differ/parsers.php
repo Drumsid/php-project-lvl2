@@ -2,60 +2,66 @@
 
 namespace Differ\differ\Parsers;
 
-function deepDiff($beforeTree, $afterTree, $res = [])
+use Symfony\Component\Yaml\Yaml;
+
+function deepDiff($beforeTree, $afterTree)
 {
-    foreach ($beforeTree as $beforeValue) {
-        $findName = findSameName($beforeValue, $afterTree);
-        if ($findName) {
+    $comparedData = array_reduce($beforeTree, function ($acc, $before) use ($afterTree) {
+        $after = findSameName($before, $afterTree);
+        if ($after) {
             if (
-                ($beforeValue['name'] == $findName['name']) && array_key_exists('type', $findName) &&
-                $findName['type'] == 'parent'
+                ($before['name'] == $after['name']) && array_key_exists('type', $after) &&
+                $after['type'] == 'parent'
             ) {
-                $beforeValue['value'] = deepDiff($beforeValue['value'], $findName['value']);
-                $res[] = $beforeValue;
-            } elseif (($beforeValue['name'] == $findName['name']) && ($beforeValue['value'] == $findName['value'])) {
-                $beforeValue['status'] = 'dontChange';
-                $beforeValue['plain'] = 'plain';
-                $res[] = $beforeValue;
-            } elseif (($beforeValue['name'] == $findName['name']) && ($beforeValue['value'] != $findName['value'])) {
-                $beforeValue['status'] = 'changed';
-                $beforeValue['plain'] = 'plain';
-                $beforeValue['beforeValue'] = $beforeValue['value'];
-                $beforeValue['afterValue'] = $findName['value'];
-                if (array_key_exists('type', $beforeValue)) {
-                    $beforeValue['type'] = 'skip';
+                $before['value'] = deepDiff($before['value'], $after['value']);
+                $acc[] = $before;
+            } elseif (($before['name'] == $after['name']) && ($before['value'] == $after['value'])) {
+                $before['status'] = 'dontChange';
+                $before['plain'] = 'plain';
+                $acc[] = $before;
+            } elseif (($before['name'] == $after['name']) && ($before['value'] != $after['value'])) {
+                $before['status'] = 'changed';
+                $before['plain'] = 'plain';
+                $before['beforeValue'] = $before['value'];
+                $before['afterValue'] = $after['value'];
+                if (array_key_exists('type', $before)) {
+                    $before['type'] = 'skip';
                 }
-                $res[] = $beforeValue;
+                $acc[] = $before;
             }
         } else {
-            $beforeValue['status'] = 'removed';
-            $beforeValue['plain'] = 'plain';
-            if (array_key_exists('type', $beforeValue)) {
-                $beforeValue['type'] = 'skip';
+            $before['status'] = 'removed';
+            $before['plain'] = 'plain';
+            if (array_key_exists('type', $before)) {
+                $before['type'] = 'skip';
             }
-            $res[] = $beforeValue;
+            $acc[] = $before;
         }
-    }
-    foreach ($afterTree as $aftervalue) {
-        $findName = findSameName($aftervalue, $beforeTree);
-        if (! $findName) {
-            $aftervalue['status'] = 'added';
-            $aftervalue['plain'] = 'plain';
-            if (array_key_exists('type', $aftervalue)) {
-                $aftervalue['type'] = 'skip';
+        return $acc;
+    }, []);
+
+    $result = array_reduce($afterTree, function ($acc, $after) use ($beforeTree) {
+        $find = findSameName($after, $beforeTree);
+        if (! $find) {
+            $after['status'] = 'added';
+            $after['plain'] = 'plain';
+            if (array_key_exists('type', $after)) {
+                $after['type'] = 'skip';
             }
-            $res[] = $aftervalue;
+            $acc[] = $after;
         }
-    }
-    usort($res, function ($item1, $item2) {
+        return $acc;
+    }, $comparedData);
+
+    usort($result, function ($item1, $item2) {
         if ($item1['name'] == $item2['name']) {
             return 0;
         }
         return ($item1['name'] < $item2['name']) ? -1 : 1;
     });
-    return $res;
-}
 
+    return $result;
+}
 function transformToArr($tree, $path = "")
 {
     $res = [];
@@ -110,7 +116,14 @@ function findSameName($findArr, $dataArrs)
     return false;
 }
 
-// тут я тестирую xdebug
-// $beforeFile = json_decode(file_get_contents(__DIR__ . "\..\..\before2.json"), true);
-// $afterFile = json_decode(file_get_contents(__DIR__ . "\..\..\after2.json"), true);
-// print_r(formatic(xDif(deepDiff((array) $beforeFile, (array) $afterFile))));
+function checkExpansion($file)
+{
+
+    if (substr($file, -4) == ".yml" && file_exists($file)) {
+        return Yaml::parseFile($file, Yaml::PARSE_OBJECT_FOR_MAP);
+    }
+    if (substr($file, -5) == ".json" && file_exists($file)) {
+        return json_decode(file_get_contents($file));
+    }
+    exit("{$file} file not exists or path incorrect\n");
+}

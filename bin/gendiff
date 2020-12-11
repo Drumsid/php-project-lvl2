@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
 
+use function Differ\differ\genDiff\genDiff;
+
 $autoloadPath1 = __DIR__ . '/../../../autoload.php';
 $autoloadPath2 = __DIR__ . '/../vendor/autoload.php';
 if (file_exists($autoloadPath1)) {
@@ -9,7 +11,7 @@ if (file_exists($autoloadPath1)) {
     require_once $autoloadPath2;
 }
 
-$gendiff = <<<DOC
+$doc = <<<DOC
 Generate diff
 
 Usage:
@@ -23,13 +25,6 @@ Options:
   --format <fmt>                Report format [default: stylish]
 DOC;
 
-$params = array(
-  'argv' => array_slice($_SERVER['argv'], 1),
-  'help' => true,
-  'version' => 'dev version',
-  'optionsFirst' => false,
-);
+$args = Docopt::handle($doc);
 
-$args = Docopt::handle($gendiff, $params);
-
-print_r(Differ\differ\genDiff\genDiff($args->args["<firstFile>"], $args->args["<secondFile>"], $args->args["--format"]));
+print_r(genDiff($args->args["<firstFile>"], $args->args["<secondFile>"], $args->args["--format"]));
