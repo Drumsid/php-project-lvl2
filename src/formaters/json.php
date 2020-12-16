@@ -1,26 +1,33 @@
 <?php
 
-namespace Differ\formaters\Json;
+namespace Differ\formaters\json;
 
-function niceJsonView($arr, $deep = 0)
+function jsonFormat($tree)
 {
-    $sep = str_repeat('    ', $deep);
-    $res = "{\n";
-    $last = count($arr) - 1;
-    $count = 0;
-    foreach ($arr as $key => $val) {
-        if (is_array($val)) {
-            $tmp = niceJsonView($val, $deep + 1);
-            $res .= $sep . "\"" . $key . "\" : " . $tmp;
-            $count++;
+    $res = array_map(function ($node) {
+        if ($node['type'] == 'nested') {
+            return [
+                    'name' => $node['name'],
+                    'type' => $node['type'],
+                    'value' => jsonFormat($node['value']),
+                ];
         } else {
-            if ($count == $last) {
-                $res .= $sep . "\"" . $key . "\" : " . "\"" . $val . "\"\n";
+            if (array_key_exists('valueBefore', $node)) {
+                return [
+                    'name' => $node['name'],
+                    'type' => $node['type'],
+                    'valueBefore' => $node['valueBefore'],
+                    'valueAfter' => $node['valueAfter'],
+                ];
             } else {
-                $res .= $sep . "\"" . $key . "\" : " . "\"" . $val . "\",\n";
-                $count++;
+                return [
+                    'name' => $node['name'],
+                    'type' => $node['type'],
+                    'value' => $node['value'],
+                ];
             }
         }
-    }
-    return $res . $sep . "}\n";
+    }, $tree);
+
+    return $res;
 }
