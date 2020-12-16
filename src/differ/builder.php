@@ -15,7 +15,7 @@ function builder($objBefore, $objAfter, $path = "")
         ) {
             return [
                 'name' => $key,
-                'status' => 'nested',
+                'type' => 'nested',
                 'path' => $path . '.' . $key,
                 'value' => builder($objBefore->$key, $objAfter->$key, $path . '.' . $key)
             ];
@@ -26,8 +26,8 @@ function builder($objBefore, $objAfter, $path = "")
         ) {
             return [
                 'name' => $key,
-                'status' => 'unchanged',
-                'plain' => 'plain',
+                'type' => 'unchanged',
+                'format' => 'plain',
                 'path' => $path . '.' . $key,
                 'value' => boolOrNullToString($objBefore->$key)
             ];
@@ -38,8 +38,8 @@ function builder($objBefore, $objAfter, $path = "")
         ) {
             return [
                 'name' => $key,
-                'status' => 'changed',
-                'plain' => 'plain',
+                'type' => 'changed',
+                'format' => 'plain',
                 'path' => $path . '.' . $key,
                 'valueBefore' => transformObjectToArr(boolOrNullToString($objBefore->$key)),
                 'valueAfter' => transformObjectToArr(boolOrNullToString($objAfter->$key))
@@ -48,8 +48,8 @@ function builder($objBefore, $objAfter, $path = "")
         if (property_exists($objBefore, $key) && ! property_exists($objAfter, $key)) {
             return [
                 'name' => $key,
-                'status' => 'removed',
-                'plain' => 'plain',
+                'type' => 'removed',
+                'format' => 'plain',
                 'path' => $path . '.' . $key,
                 'value' => transformObjectToArr(boolOrNullToString($objBefore->$key))
             ];
@@ -57,8 +57,8 @@ function builder($objBefore, $objAfter, $path = "")
         if (! property_exists($objBefore, $key) && property_exists($objAfter, $key)) {
             return [
                 'name' => $key,
-                'status' => 'added',
-                'plain' => 'plain',
+                'type' => 'added',
+                'format' => 'plain',
                 'path' => $path . '.' . $key,
                 'value' => transformObjectToArr(boolOrNullToString($objAfter->$key))
             ];
@@ -86,13 +86,13 @@ function transformObjectToArr($obj)
         if (is_object($obj[$key])) {
             $acc[] = [
                 'name' => $key,
-                'status' => 'return',
+                'type' => 'return',
                 'value' => transformObjectToArr($obj[$key])
             ];
         } else {
             $acc[] = [
                 'name' => $key,
-                'status' => 'return',
+                'type' => 'return',
                 'value' => $obj[$key]
             ];
         }

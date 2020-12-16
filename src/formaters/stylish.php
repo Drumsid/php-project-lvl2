@@ -10,29 +10,29 @@ function stylish($arr, $deep = 0)
 {
     $sep = str_repeat('    ', $deep);
     $res = array_map(function ($item) use ($sep, $deep) {
-        if ($item['status'] == 'nested') {
+        if ($item['type'] == 'nested') {
             $tmp = stylish($item['value'], $deep + 1);
             return $sep . UNCHANGED . $item['name'] . " : " . $tmp . "\n";
         }
-        if ($item['status'] == 'unchanged') {
+        if ($item['type'] == 'unchanged') {
             $tmp = arrToStr($item['value'], $deep + 1);
             return $sep . UNCHANGED . $item['name'] . " : " . $tmp . "\n";
         }
-        if ($item['status'] == 'changed') {
+        if ($item['type'] == 'changed') {
             $tempBefore = arrToStr($item['valueBefore'], $deep + 1);
             $tempAfter = arrToStr($item['valueAfter'], $deep + 1);
             return $sep . MINUS . $item['name'] . " : " . $tempBefore . "\n" . $sep .
             PLUS . $item['name'] . " : " . $tempAfter . "\n";
         }
-        if ($item['status'] == 'removed') {
+        if ($item['type'] == 'removed') {
             $tmp = arrToStr($item['value'], $deep + 1);
             return $sep . MINUS . $item['name'] . " : " . $tmp . "\n";
         }
-        if ($item['status'] == 'added') {
+        if ($item['type'] == 'added') {
             $tmp = arrToStr($item['value'], $deep + 1);
             return $sep . PLUS . $item['name'] . " : " . $tmp . "\n";
         }
-        if ($item['status'] == 'return') {
+        if ($item['type'] == 'return') {
             $tmp = arrToStr($item['value'], $deep + 1);
             return $sep . UNCHANGED . $item['name'] . " : " . $tmp . "\n";
         }
