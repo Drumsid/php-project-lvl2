@@ -1,56 +1,52 @@
 <?php
 
-namespace Differ\formaters\Stylish;
+namespace Differ\formaters\stylish;
 
-function correctStruktures($arr)
-{
-    if (! is_array($arr) || (array_key_exists('type', $arr) && $v['type'] == 'skip')) {
-        return $arr;
-    }
-    $res = [];
-    foreach ($arr as $v) {
-        if (is_array($v) && array_key_exists('type', $v) && $v['type'] == 'parent') {
-            $res["    " . $v['name']] = correctStruktures($v['value']);
-        } else {
-            $res["    " . $v['name']] = $v['value'];
-        }
-    }
-    return $res;
-}
-
-function xDif($diff)
-{
-    $res = [];
-    foreach ($diff as $array) {
-        if (array_key_exists('type', $array) && $array['type'] == 'parent') {
-            $res['    ' . $array['name']] = xDif($array['value']);
-        } else {
-            if (array_key_exists('status', $array) && $array['status'] == 'dontChange') {
-                $res['    ' . $array['name']] = $array['value'];
-            } elseif (array_key_exists('status', $array) && $array['status'] == 'removed') {
-                $res['  - ' . $array['name']] = correctStruktures($array['value']);
-            } elseif (array_key_exists('status', $array) && $array['status'] == 'added') {
-                $res['  + ' . $array['name']] = correctStruktures($array['value']);
-            } elseif (array_key_exists('status', $array) && $array['status'] == 'changed') {
-                $res['  - ' . $array['name']] = correctStruktures($array['beforeValue']);
-                $res['  + ' . $array['name']] = correctStruktures($array['afterValue']);
-            }
-        }
-    }
-    return $res;
-}
+const UNCHANGED = "    ";
+const PLUS = "  + ";
+const MINUS = "  - ";
 
 function stylish($arr, $deep = 0)
 {
     $sep = str_repeat('    ', $deep);
-    $res = "{\n";
-    foreach ($arr as $key => $val) {
-        if (is_array($val)) {
-            $tmp = stylish($val, $deep + 1);
-            $res .= $sep . $key . " : " . $tmp;
-        } else {
-            $res .= $sep . $key . " : " . $val . "\n";
+    $res = array_map(function ($item) use ($sep, $deep) {
+        if ($item['status'] == 'nested') {
+            $tmp = stylish($item['value'], $deep + 1);
+            return $sep . UNCHANGED . $item['name'] . " : " . $tmp . "\n";
         }
+        if ($item['status'] == 'unchanged') {
+            $tmp = arrToStr($item['value'], $deep + 1);
+            return $sep . UNCHANGED . $item['name'] . " : " . $tmp . "\n";
+        }
+        if ($item['status'] == 'changed') {
+            $tempBefore = arrToStr($item['valueBefore'], $deep + 1);
+            $tempAfter = arrToStr($item['valueAfter'], $deep + 1);
+            return $sep . MINUS . $item['name'] . " : " . $tempBefore . "\n" . $sep .
+            PLUS . $item['name'] . " : " . $tempAfter . "\n";
+        }
+        if ($item['status'] == 'removed') {
+            $tmp = arrToStr($item['value'], $deep + 1);
+            return $sep . MINUS . $item['name'] . " : " . $tmp . "\n";
+        }
+        if ($item['status'] == 'added') {
+            $tmp = arrToStr($item['value'], $deep + 1);
+            return $sep . PLUS . $item['name'] . " : " . $tmp . "\n";
+        }
+        if ($item['status'] == 'return') {
+            $tmp = arrToStr($item['value'], $deep + 1);
+            return $sep . UNCHANGED . $item['name'] . " : " . $tmp . "\n";
+        }
+    }, $arr);
+        array_unshift($res, "{\n");
+        array_push($res, $sep . "}");
+    return implode($res);
+}
+
+function arrToStr($arr, $deep)
+{
+    if (is_array($arr)) {
+        return stylish($arr, $deep);
+    } else {
+        return $arr;
     }
-    return $res . $sep . "}\n";
 }

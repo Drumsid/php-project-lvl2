@@ -2,29 +2,16 @@
 
 namespace Differ\differ\genDiff;
 
-use function Differ\differ\Parsers\deepDiff;
-use function Differ\differ\Parsers\checkExpansion;
-use function Differ\formaters\Stylish\xDif;
-use function Differ\differ\Parsers\boolOrNullToString;
-use function Differ\formaters\Stylish\stylish;
-use function Differ\differ\Parsers\transformToArr;
-use function Differ\formaters\Plain\plain;
-use function Differ\formaters\Json\niceJsonView;
+use function Differ\differ\builder\builder;
+use function Differ\differ\parsers\checkExpansion;
+use function Differ\formaters\formatters\checkFormat;
 
-function genDiff($beforeJson, $afterJson, $format = 'stylish')
+function genDiff($fileBefore, $fileAfter, $format = 'stylish')
 {
-    $beforeJson = checkExpansion($beforeJson);
-    $afterJson = checkExpansion($afterJson);
+    $beforeObj = checkExpansion($fileBefore);
+    $afterObj = checkExpansion($fileAfter);
 
-    $beforeJson = transformToArr($beforeJson);
-    $afterJson = transformToArr($afterJson);
+    $tree = builder($beforeObj, $afterObj);
 
-    $strJson = deepDiff($beforeJson, $afterJson);
-    if ($format == 'plain') {
-        return plain($strJson);
-    }
-    if ($format == 'json') {
-        return niceJsonView(xDif($strJson));
-    }
-    return stylish(xDif($strJson));
+    return checkFormat($format, $tree);
 }

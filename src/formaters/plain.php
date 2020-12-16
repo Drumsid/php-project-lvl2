@@ -1,28 +1,27 @@
 <?php
 
-namespace Differ\formaters\Plain;
+namespace Differ\formaters\plain;
 
-function collectPathArr($arr)
+function buldPlain($tree)
 {
-    $res = [];
-    foreach ($arr as $key => $value) {
-        if (array_key_exists('type', $value) && $value['type'] == 'parent') {
-            $tmp = collectPathArr($value['value']);
-            $res = array_merge($res, $tmp);
-        } else {
-            if (array_key_exists('plain', $value) && $value['status'] == 'changed') {
-                $res[] = "Property '" . substr($value['path'], 1) . "' was updated. From " .
-                checkArray($value['beforeValue']) .  " to "  . checkArray($value['afterValue']) . ".";
-            }
-            if (array_key_exists('plain', $value) && $value['status'] == 'removed') {
-                $res[] = "Property '" . substr($value['path'], 1) . "' was removed.";
-            }
-            if (array_key_exists('plain', $value) && $value['status'] == 'added') {
-                $res[] = "Property '" . substr($value['path'], 1) . "' was added with value: " .
-                checkArray($value['value']) . ".";
-            }
+    $res = array_reduce($tree, function ($acc, $node) {
+        if (array_key_exists('status', $node) && $node['status'] == 'nested') {
+            $tmp = buldPlain($node['value']);
+            $acc = array_merge($acc, $tmp);
         }
-    }
+        if (array_key_exists('plain', $node) && $node['status'] == 'changed') {
+            $acc[] = "Property '" . substr($node['path'], 1) . "' was updated. From " .
+            checkArray($node['valueBefore']) .  " to "  . checkArray($node['valueAfter']) . ".";
+        }
+        if (array_key_exists('plain', $node) && $node['status'] == 'removed') {
+            $acc[] = "Property '" . substr($node['path'], 1) . "' was removed.";
+        }
+        if (array_key_exists('plain', $node) && $node['status'] == 'added') {
+            $acc[] = "Property '" . substr($node['path'], 1) . "' was added with value: " .
+            checkArray($node['value']) . ".";
+        }
+        return $acc;
+    }, []);
     return $res;
 }
 
@@ -36,5 +35,5 @@ function checkArray($val)
 
 function plain($arr)
 {
-    return implode("\n", collectPathArr($arr));
+    return implode("\n", buldPlain($arr));
 }
