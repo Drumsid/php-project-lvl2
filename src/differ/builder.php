@@ -12,11 +12,12 @@ function builder($objBefore, $objAfter, $path = "")
         if (
             property_exists($objBefore, $key) && property_exists($objAfter, $key)
             && is_object($objBefore->$key) && is_object($objAfter->$key)
+            // is_object($objBefore->$key) && ($objBefore->$key == $objAfter->$key)
         ) {
             return [
                 'name' => $key,
                 'type' => 'nested',
-                'path' => $path . '.' . $key,
+                // 'path' => $path . '.' . $key,
                 'value' => builder($objBefore->$key, $objAfter->$key, $path . '.' . $key)
             ];
         }
