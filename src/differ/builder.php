@@ -7,71 +7,57 @@ use function Funct\Collection\union;
 function builder($objBefore, $objAfter, $path = "")
 {
     $unicKey = union(array_keys(get_object_vars($objBefore)), array_keys(get_object_vars($objAfter)));
-
+    sort($unicKey);
     $res = array_map(function ($key) use ($objBefore, $objAfter, $path) {
         if (
             property_exists($objBefore, $key) && property_exists($objAfter, $key)
             && is_object($objBefore->$key) && is_object($objAfter->$key)
-            // is_object($objBefore->$key) && ($objBefore->$key == $objAfter->$key)
         ) {
             return [
                 'name' => $key,
                 'type' => 'nested',
-                // 'path' => $path . '.' . $key,
-                'value' => builder($objBefore->$key, $objAfter->$key, $path . '.' . $key)
+                'children' => builder($objBefore->$key, $objAfter->$key, $path . '.' . $key)
             ];
-        }
-        if (
-            property_exists($objBefore, $key) && property_exists($objAfter, $key)
-            && ($objBefore->$key == $objAfter->$key)
-        ) {
-            return [
-                'name' => $key,
-                'type' => 'unchanged',
-                'format' => 'plain',
-                'path' => $path . '.' . $key,
-                'value' => boolOrNullToString($objBefore->$key)
-            ];
-        }
-        if (
-            property_exists($objBefore, $key) && property_exists($objAfter, $key)
-            && ($objBefore->$key != $objAfter->$key)
-        ) {
-            return [
-                'name' => $key,
-                'type' => 'changed',
-                'format' => 'plain',
-                'path' => $path . '.' . $key,
-                'valueBefore' => transformObjectToArr(boolOrNullToString($objBefore->$key)),
-                'valueAfter' => transformObjectToArr(boolOrNullToString($objAfter->$key))
-            ];
-        }
-        if (property_exists($objBefore, $key) && ! property_exists($objAfter, $key)) {
-            return [
-                'name' => $key,
-                'type' => 'removed',
-                'format' => 'plain',
-                'path' => $path . '.' . $key,
-                'value' => transformObjectToArr(boolOrNullToString($objBefore->$key))
-            ];
-        }
-        if (! property_exists($objBefore, $key) && property_exists($objAfter, $key)) {
-            return [
-                'name' => $key,
-                'type' => 'added',
-                'format' => 'plain',
-                'path' => $path . '.' . $key,
-                'value' => transformObjectToArr(boolOrNullToString($objAfter->$key))
-            ];
+        } else {
+            if (
+                property_exists($objBefore, $key) && property_exists($objAfter, $key)
+                && ($objBefore->$key != $objAfter->$key)
+            ) {
+                return [
+                    'name' => $key,
+                    'type' => 'changed',
+                    'format' => 'plain',
+                    'path' => $path . '.' . $key,
+                    'valueBefore' => $objBefore->$key,
+                    'valueAfter' => $objAfter->$key
+                ];
+            } elseif (! property_exists($objAfter, $key)) {
+                return [
+                    'name' => $key,
+                    'type' => 'removed',
+                    'format' => 'plain',
+                    'path' => $path . '.' . $key,
+                    'value' => $objBefore->$key
+                ];
+            } elseif (! property_exists($objBefore, $key)) {
+                return [
+                    'name' => $key,
+                    'type' => 'added',
+                    'format' => 'plain',
+                    'path' => $path . '.' . $key,
+                    'value' => $objAfter->$key
+                ];
+            } else {
+                return [
+                    'name' => $key,
+                    'type' => 'unchanged',
+                    'format' => 'plain',
+                    'path' => $path . '.' . $key,
+                    'value' => $objBefore->$key
+                ];
+            }
         }
     }, $unicKey);
-
-    usort($res, function ($item1, $item2) {
-        if ($item1['name'] == $item2['name']) {
-            return 0;
-        }
-        return ($item1['name'] < $item2['name']) ? -1 : 1;
-    });
     return $res;
 }
 

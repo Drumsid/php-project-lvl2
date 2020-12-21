@@ -2,44 +2,42 @@
 
 namespace Differ\formaters\stylish;
 
-const UNCHANGED = "    ";
-const PLUS = "  + ";
-const MINUS = "  - ";
+use function Differ\differ\builder\transformObjectToArr;
+use function Differ\differ\builder\boolOrNullToString;
 
 function stylish($arr, $deep = 0)
 {
     $sep = str_repeat('    ', $deep);
     $res = array_map(function ($item) use ($sep, $deep) {
-        if ($item['type'] == 'nested') {
-            $tmp = stylish($item['value'], $deep + 1);
-            return $sep . UNCHANGED . $item['name'] . " : " . $tmp . "\n";
-        }
-        if ($item['type'] == 'unchanged') {
-            $tmp = arrToStr($item['value'], $deep + 1);
-            return $sep . UNCHANGED . $item['name'] . " : " . $tmp . "\n";
-        }
-        if ($item['type'] == 'changed') {
-            $tempBefore = arrToStr($item['valueBefore'], $deep + 1);
-            $tempAfter = arrToStr($item['valueAfter'], $deep + 1);
-            return $sep . MINUS . $item['name'] . " : " . $tempBefore . "\n" . $sep .
-            PLUS . $item['name'] . " : " . $tempAfter . "\n";
-        }
-        if ($item['type'] == 'removed') {
-            $tmp = arrToStr($item['value'], $deep + 1);
-            return $sep . MINUS . $item['name'] . " : " . $tmp . "\n";
-        }
-        if ($item['type'] == 'added') {
-            $tmp = arrToStr($item['value'], $deep + 1);
-            return $sep . PLUS . $item['name'] . " : " . $tmp . "\n";
-        }
-        if ($item['type'] == 'return') {
-            $tmp = arrToStr($item['value'], $deep + 1);
-            return $sep . UNCHANGED . $item['name'] . " : " . $tmp . "\n";
+        switch ($item['type']) {
+            case 'nested':
+                $tmp = stylish($item['children'], $deep + 1);
+                return $sep . "    " . $item['name'] . " : " . $tmp . "\n";
+            case 'unchanged':
+                $tmp = arrToStr($item['value'], $deep + 1);
+                return $sep . "    " . $item['name'] . " : " . $tmp . "\n";
+            case 'changed':
+                $tempBefore = transformObjectToArr(boolOrNullToString($item['valueBefore']));
+                $tempBefore = arrToStr($tempBefore, $deep + 1);
+                $tempAfter = transformObjectToArr(boolOrNullToString($item['valueAfter']));
+                $tempAfter = arrToStr($tempAfter, $deep + 1);
+                return $sep . "  - " . $item['name'] . " : " . $tempBefore . "\n" . $sep .
+                "  + " . $item['name'] . " : " . $tempAfter . "\n";
+            case 'removed':
+                $tmp = transformObjectToArr(boolOrNullToString($item['value']));
+                $tmp = arrToStr($tmp, $deep + 1);
+                return $sep . "  - " . $item['name'] . " : " . $tmp . "\n";
+            case 'added':
+                $tmp = transformObjectToArr(boolOrNullToString($item['value']));
+                $tmp = arrToStr($tmp, $deep + 1);
+                return $sep . "  + " . $item['name'] . " : " . $tmp . "\n";
+            case 'return':
+                $tmp = transformObjectToArr(boolOrNullToString($item['value']));
+                $tmp = arrToStr($tmp, $deep + 1);
+                return $sep . "    " . $item['name'] . " : " . $tmp . "\n";
         }
     }, $arr);
-        array_unshift($res, "{\n");
-        array_push($res, $sep . "}");
-    return implode($res);
+    return implode(addBrackets($res, $sep));
 }
 
 function arrToStr($arr, $deep)
@@ -49,4 +47,12 @@ function arrToStr($arr, $deep)
     } else {
         return $arr;
     }
+}
+
+function addBrackets($tree, $sep)
+{
+    $last = count($tree) - 1;
+    $tree[0] = "{\n" . $tree[0];
+    $tree[$last] = $tree[$last] . $sep . "}";
+    return $tree;
 }
