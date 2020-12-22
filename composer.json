@@ -26,10 +26,10 @@
             "src/differ/genDiff.php",
             "src/differ/parsers.php",
             "src/differ/builder.php",
-            "src/formaters/formatters.php",
-            "src/formaters/stylish.php",
-            "src/formaters/plain.php",
-            "src/formaters/json.php"
+            "src/formatters/formatters.php",
+            "src/formatters/stylish.php",
+            "src/formatters/plain.php",
+            "src/formatters/json.php"
         ]
     }
 }

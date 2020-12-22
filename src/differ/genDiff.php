@@ -3,15 +3,15 @@
 namespace Differ\differ\genDiff;
 
 use function Differ\differ\builder\builder;
-use function Differ\differ\parsers\checkExpansion;
-use function Differ\formaters\formatters\checkFormat;
+use function Differ\differ\parsers\parseData;
+use function Differ\formatters\formatters\renderFormat;
 
 function genDiff($fileBefore, $fileAfter, $format = 'stylish')
 {
-    $beforeObj = checkExpansion($fileBefore);
-    $afterObj = checkExpansion($fileAfter);
+    $beforeObj = parseData($fileBefore);
+    $afterObj = parseData($fileAfter);
 
     $tree = builder($beforeObj, $afterObj);
 
-    return checkFormat($format, $tree);
+    return renderFormat($format, $tree);
 }

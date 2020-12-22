@@ -51,7 +51,6 @@ function builder($objBefore, $objAfter, $path = "")
                 return [
                     'name' => $key,
                     'type' => 'unchanged',
-                    'format' => 'plain',
                     'path' => $path . '.' . $key,
                     'value' => $objBefore->$key
                 ];
