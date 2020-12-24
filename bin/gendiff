@@ -28,3 +28,5 @@ DOC;
 $args = Docopt::handle($doc);
 
 print_r(genDiff($args->args["<firstFile>"], $args->args["<secondFile>"], $args->args["--format"]));
+  // $testWriteFromBinDiff = genDiff($args->args["<firstFile>"], $args->args["<secondFile>"], $args->args["--format"]);
+  // file_put_contents(__DIR__ . '/../tests/fixtures/json/correctDeepYmlToJson', $testWriteFromBinDiff);

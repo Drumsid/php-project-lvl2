@@ -63,8 +63,8 @@ class GetDifferTest extends TestCase
     {
         $correctDiffJson = file_get_contents(__DIR__ . '/fixtures/json/correctDeepYmlToJson');
         $inCorrectDiffJson = "{incorrect:json}";
-        $beforeJson = __DIR__ . "/fixtures/jsonTestFile/deepBefore.json";
-        $afterJson = __DIR__ . "/fixtures/jsonTestFile/deepAfter.json";
+        $beforeJson = __DIR__ . "/fixtures/ymlTestFile/deepBefore.yml";
+        $afterJson = __DIR__ . "/fixtures/ymlTestFile/deepAfter.yml";
         $result1 = genDiff($beforeJson, $afterJson, 'json');
         $this->assertSame($correctDiffJson, $result1);
         $this->assertNotSame($inCorrectDiffJson, $result1);

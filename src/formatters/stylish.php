@@ -5,6 +5,7 @@ namespace Differ\formatters\stylish;
 use function Differ\differ\builder\transformObjectToArr;
 use function Differ\differ\builder\boolOrNullToString;
 
+// function buildStylish($arr, $depth = 0)
 function stylish($arr, $depth = 0)
 {
     $sep = str_repeat('    ', $depth);
@@ -37,8 +38,14 @@ function stylish($arr, $depth = 0)
                 return $sep . "    " . $item['name'] . " : " . $return . "\n";
         }
     }, $arr);
+    // print_r($res);
     return implode(addBrackets($res, $sep));
+    // return addBrackets($res, $sep);
 }
+// function stylish($arr)
+// {
+//     return implode($arr);
+// }
 
 function arrToStr($arr, $depth)
 {

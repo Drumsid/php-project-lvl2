@@ -13,7 +13,9 @@ function renderFormat($format, $tree)
             return plain($tree);
         case 'json':
             return jsonFormat($tree);
-        default:
+        case 'stylish':
             return stylish($tree);
+        default:
+            return "Unknown format: '{$format}'!";
     }
 }
