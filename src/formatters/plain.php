@@ -2,8 +2,9 @@
 
 namespace Differ\formatters\plain;
 
-use function Differ\differ\builder\transformObjectToArr;
+// use function Differ\differ\builder\transformObjectToArr;
 use function Differ\differ\builder\boolOrNullToString;
+use function Differ\differ\builder\stringify;
 
 function buldPlain($tree)
 {
@@ -13,8 +14,10 @@ function buldPlain($tree)
             $acc = array_merge($acc, $children);
         }
         if (/*array_key_exists('format', $node) && */$node['type'] == 'changed') {
-            $node['valueBefore'] = transformObjectToArr(boolOrNullToString($node['valueBefore']));
-            $node['valueAfter'] = transformObjectToArr(boolOrNullToString($node['valueAfter']));
+            // $node['valueBefore'] = transformObjectToArr(boolOrNullToString($node['valueBefore']));
+            $node['valueBefore'] = stringify($node['valueBefore']);
+            // $node['valueAfter'] = transformObjectToArr(boolOrNullToString($node['valueAfter']));
+            $node['valueAfter'] = stringify($node['valueAfter']);
             $acc[] = "Property '" . substr($node['path'], 1) . "' was updated. From " .
             renderNodeValue($node['valueBefore']) .  " to "  . renderNodeValue($node['valueAfter']) . ".";
         }
@@ -22,7 +25,8 @@ function buldPlain($tree)
             $acc[] = "Property '" . substr($node['path'], 1) . "' was removed.";
         }
         if (/*array_key_exists('format', $node) && */$node['type'] == 'added') {
-            $node['value'] = transformObjectToArr(boolOrNullToString($node['value']));
+            // $node['value'] = transformObjectToArr(boolOrNullToString($node['value']));
+            $node['value'] = stringify($node['value']);
             $acc[] = "Property '" . substr($node['path'], 1) . "' was added with value: " .
             renderNodeValue($node['value']) . ".";
         }

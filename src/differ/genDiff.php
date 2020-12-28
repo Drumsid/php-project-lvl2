@@ -12,6 +12,7 @@ function genDiff($fileBefore, $fileAfter, $format = 'stylish')
     $afterObj = parseData($fileAfter);
 
     $tree = builder($beforeObj, $afterObj);
+    // print_r($tree);
 
     return renderFormat($format, $tree);
 }
