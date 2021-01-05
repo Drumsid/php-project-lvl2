@@ -2,10 +2,7 @@
 
 namespace Differ\formatters\stylish;
 
-// use function Differ\differ\builder\boolOrNullToString;
 use function Differ\builder\stringify;
-
-// use function Differ\differ\builder\testStr;
 
 function stylish($arr, $depth = 0)
 {
@@ -15,54 +12,46 @@ function stylish($arr, $depth = 0)
         if (array_key_exists('type', $item)) {
             $type = $item['type'];
         }
-        // print_r($type);
-        // switch ($item['type']) {
         switch ($type) {
             case 'nested':
                 $children = stylish($item['children'], $depth + 1);
                 return $sep . "    " . $item['name'] . " : " . $children . "\n";
             case 'unchanged':
-                $unchanged = arrToStr($item['value'], $depth + 1);
+                $unchanged = $item['value'];
                 return $sep . "    " . $item['name'] . " : " . $unchanged . "\n";
             case 'changed':
-                $transformedBefore = stringify($item['valueBefore']);
-                $changedBefore = arrToStr($transformedBefore, $depth + 1);
-                $transformedAfter = stringify($item['valueAfter']);
-                $changedAfter = arrToStr($transformedAfter, $depth + 1);
+                $changedBefore = arrToStr(stringify($item['valueBefore']), $depth + 1);
+                $changedAfter = arrToStr(stringify($item['valueAfter']), $depth + 1);
                 return $sep . "  - " . $item['name'] . " : " . $changedBefore . "\n" . $sep .
                 "  + " . $item['name'] . " : " . $changedAfter . "\n";
             case 'removed':
-                $transformed = stringify($item['value']);
-                $removed = arrToStr($transformed, $depth + 1);
+                $removed = arrToStr(stringify($item['value']), $depth + 1);
                 return $sep . "  - " . $item['name'] . " : " . $removed . "\n";
             case 'added':
-                $transformed = stringify($item['value']);
-                $added = arrToStr($transformed, $depth + 1);
+                $added = arrToStr(stringify($item['value']), $depth + 1);
                 return $sep . "  + " . $item['name'] . " : " . $added . "\n";
-            // case 'return':
-            //     $transformed = stringify($item['value']);
-            //     $return = arrToStr($transformed, $depth + 1);
-            //     return $sep . "    " . $item['name'] . " : " . $return . "\n";
-            default:
-                $transformed = stringify($item['value']);
-                $return = arrToStr($transformed, $depth + 1);
-                return $sep . "    " . $item['name'] . " : " . $return . "\n";
         }
     }, $arr);
-    // print_r($res);
-    return implode(addBrackets($res, $sep));
-    // return addBrackets($res, $sep);
+    if (is_array($res)) {
+        return implode(addBrackets($res, $sep));
+    }
+    return $res;
 }
-
 function arrToStr($arr, $depth)
 {
-    if (is_array($arr)) {
-        return stylish($arr, $depth);
-    } else {
+    $sep = str_repeat('    ', $depth);
+    if (!is_array($arr)) {
         return $arr;
     }
+    $res = array_map(function ($node) use ($depth, $sep) {
+        if (is_array($node['value'])) {
+            return $sep . "    " . $node['name'] . " : " . arrToStr($node['value'], $depth + 1) . "\n";
+        } else {
+            return $sep . "    " . $node['name'] . " : " . $node['value'] . "\n";
+        }
+    }, $arr);
+    return implode(addBrackets($res, $sep));
 }
-
 function addBrackets($tree, $sep)
 {
     $first = 0;

@@ -4,8 +4,6 @@ namespace Differ\builder;
 
 use function Funct\Collection\union;
 
-// use function Differ\formatters\stylish\addBrackets;
-
 function builder($objBefore, $objAfter, $path = "")
 {
     $unicKey = union(array_keys(get_object_vars($objBefore)), array_keys(get_object_vars($objAfter)));
@@ -59,7 +57,6 @@ function builder($objBefore, $objAfter, $path = "")
     }, $unicKey);
     return $res;
 }
-
 function stringify($data)
 {
     if (is_null($data)) {
@@ -77,21 +74,22 @@ function stringify($data)
         $obj = get_object_vars($data);
     }
     $keys = array_keys($obj);
-        $res = array_reduce($keys, function ($acc, $key) use ($obj) {
-            if (is_object($obj[$key])) {
-                $acc[] = [
-                    'name' => $key,
-                    'value' => stringify($obj[$key])
-                ];
-            } else {
-                $acc[] = [
-                    'name' => $key,
-                    'value' => $obj[$key]
-                ];
-            }
-            return $acc;
-        }, []);
-        return $res;
+
+    $res = array_reduce($keys, function ($acc, $key) use ($obj) {
+        if (is_object($obj[$key])) {
+            $acc[] = [
+                'name' => $key,
+                'value' => stringify($obj[$key])
+            ];
+        } else {
+            $acc[] = [
+                'name' => $key,
+                'value' => $obj[$key]
+            ];
+        }
+        return $acc;
+    }, []);
+    return $res;
 }
 
 function testStr($arr, $sep)
@@ -107,5 +105,4 @@ function testStr($arr, $sep)
         }
     }, $arr);
     return implode($res);
-    // return implode(addBrackets($res, $sep));
 }
