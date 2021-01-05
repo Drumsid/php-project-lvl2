@@ -2,18 +2,17 @@
 
 namespace Differ\formatters\stylish;
 
-// use function Differ\differ\builder\transformObjectToArr;
-use function Differ\differ\builder\boolOrNullToString;
-use function Differ\differ\builder\stringify;
-use function Differ\differ\builder\testStr;
+// use function Differ\differ\builder\boolOrNullToString;
+use function Differ\builder\stringify;
 
-// function buildStylish($arr, $depth = 0)
+// use function Differ\differ\builder\testStr;
+
 function stylish($arr, $depth = 0)
 {
     $sep = str_repeat('    ', $depth);
     $res = array_map(function ($item) use ($sep, $depth) {
         $type = 'none';
-        if(array_key_exists('type', $item)){
+        if (array_key_exists('type', $item)) {
             $type = $item['type'];
         }
         // print_r($type);
@@ -54,10 +53,6 @@ function stylish($arr, $depth = 0)
     return implode(addBrackets($res, $sep));
     // return addBrackets($res, $sep);
 }
-// function stylish($arr)
-// {
-//     return implode($arr);
-// }
 
 function arrToStr($arr, $depth)
 {

@@ -4,7 +4,7 @@ namespace Differ\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-use function Differ\differ\genDiff\genDiff;
+use function Differ\genDiff\genDiff;
 
 class GetDifferTest extends TestCase
 {

@@ -3,8 +3,8 @@
 namespace Differ\formatters\plain;
 
 // use function Differ\differ\builder\transformObjectToArr;
-use function Differ\differ\builder\boolOrNullToString;
-use function Differ\differ\builder\stringify;
+// use function Differ\differ\builder\boolOrNullToString;
+use function Differ\builder\stringify;
 
 function buldPlain($tree)
 {

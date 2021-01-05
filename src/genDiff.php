@@ -1,10 +1,10 @@
 <?php
 
-namespace Differ\differ\genDiff;
+namespace Differ\genDiff;
 
-use function Differ\differ\builder\builder;
-use function Differ\differ\parsers\parseData;
-use function Differ\formatters\formatters\renderFormat;
+use function Differ\builder\builder;
+use function Differ\parsers\parseData;
+use function Differ\formatters\renderFormat;
 
 function genDiff($fileBefore, $fileAfter, $format = 'stylish')
 {
@@ -12,7 +12,6 @@ function genDiff($fileBefore, $fileAfter, $format = 'stylish')
     $afterObj = parseData($fileAfter);
 
     $tree = builder($beforeObj, $afterObj);
-    // print_r($tree);
 
     return renderFormat($format, $tree);
 }
