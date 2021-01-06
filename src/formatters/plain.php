@@ -2,8 +2,6 @@
 
 namespace Differ\formatters\plain;
 
-use function Differ\builder\stringify;
-
 function buldPlain($tree)
 {
     $res = array_reduce($tree, function ($acc, $node) {
@@ -29,7 +27,40 @@ function buldPlain($tree)
     }, []);
     return $res;
 }
+function stringify($data)
+{
+    if (is_null($data)) {
+        return 'null';
+    }
+    if (is_bool($data) && $data === true) {
+        return 'true';
+    }
+    if (is_bool($data) && $data === false) {
+        return 'false';
+    }
+    if (! is_object($data)) {
+        return $data;
+    } else {
+        $obj = get_object_vars($data);
+    }
+    $keys = array_keys($obj);
 
+    $res = array_reduce($keys, function ($acc, $key) use ($obj) {
+        if (is_object($obj[$key])) {
+            $acc[] = [
+                'name' => $key,
+                'value' => stringify($obj[$key])
+            ];
+        } else {
+            $acc[] = [
+                'name' => $key,
+                'value' => $obj[$key]
+            ];
+        }
+        return $acc;
+    }, []);
+    return $res;
+}
 function renderNodeValue($val)
 {
     if (is_array($val)) {
@@ -41,4 +72,9 @@ function renderNodeValue($val)
 function plain($arr)
 {
     return implode("\n", buldPlain($arr));
+}
+
+function render($arr)
+{
+    return plain($arr);
 }

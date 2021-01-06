@@ -2,19 +2,15 @@
 
 namespace Differ\formatters;
 
-use function Differ\formatters\stylish\stylish;
-use function Differ\formatters\plain\plain;
-use function Differ\formatters\json\jsonFormat;
-
 function renderFormat($format, $tree)
 {
     switch ($format) {
         case 'plain':
-            return plain($tree);
+            return plain\render($tree);
         case 'json':
-            return jsonFormat($tree);
+            return json\render($tree);
         case 'stylish':
-            return stylish($tree);
+            return stylish\render($tree);
         default:
             return "Unknown format: '{$format}'!";
     }

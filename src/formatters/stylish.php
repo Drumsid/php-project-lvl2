@@ -2,8 +2,6 @@
 
 namespace Differ\formatters\stylish;
 
-use function Differ\builder\stringify;
-
 function stylish($arr, $depth = 0)
 {
     $sep = str_repeat('    ', $depth);
@@ -21,14 +19,18 @@ function stylish($arr, $depth = 0)
                 return $sep . "    " . $item['name'] . " : " . $unchanged . "\n";
             case 'changed':
                 $changedBefore = arrToStr(stringify($item['valueBefore']), $depth + 1);
+                // $changedBefore = stringify($item['valueBefore'], $depth + 1);
                 $changedAfter = arrToStr(stringify($item['valueAfter']), $depth + 1);
+                // $changedAfter = stringify($item['valueAfter'], $depth + 1);
                 return $sep . "  - " . $item['name'] . " : " . $changedBefore . "\n" . $sep .
                 "  + " . $item['name'] . " : " . $changedAfter . "\n";
             case 'removed':
                 $removed = arrToStr(stringify($item['value']), $depth + 1);
+                // $removed = stringify($item['value'], $depth + 1);
                 return $sep . "  - " . $item['name'] . " : " . $removed . "\n";
             case 'added':
                 $added = arrToStr(stringify($item['value']), $depth + 1);
+                // $added = stringify($item['value'], $depth + 1);
                 return $sep . "  + " . $item['name'] . " : " . $added . "\n";
         }
     }, $arr);
@@ -36,6 +38,41 @@ function stylish($arr, $depth = 0)
         return implode(addBrackets($res, $sep));
     }
     return $res;
+}
+function stringify($data)
+{
+    if (is_null($data)) {
+        return 'null';
+    }
+    if (is_bool($data) && $data === true) {
+        return 'true';
+    }
+    if (is_bool($data) && $data === false) {
+        return 'false';
+    }
+    if (! is_object($data)) {
+        return $data;
+    } else {
+        $obj = get_object_vars($data);
+    }
+    $keys = array_keys($obj);
+
+    $res = array_reduce($keys, function ($acc, $key) use ($obj) {
+        if (is_object($obj[$key])) {
+            $acc[] = [
+                'name' => $key,
+                'value' => stringify($obj[$key])
+            ];
+        } else {
+            $acc[] = [
+                'name' => $key,
+                'value' => $obj[$key]
+            ];
+        }
+        return $acc;
+    }, []);
+    return $res;
+    // return arrToStr($res, $depth);
 }
 function arrToStr($arr, $depth)
 {
@@ -59,4 +96,8 @@ function addBrackets($tree, $sep)
     $tree[$first] = "{\n" . $tree[$first];
     $tree[$last] = $tree[$last] . $sep . "}";
     return $tree;
+}
+function render($arr)
+{
+    return stylish($arr);
 }

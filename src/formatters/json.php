@@ -6,3 +6,8 @@ function jsonFormat($tree)
 {
     return json_encode($tree);
 }
+
+function render($arr)
+{
+    return jsonFormat($arr);
+}
