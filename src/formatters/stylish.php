@@ -18,19 +18,15 @@ function stylish($arr, $depth = 0)
                 $unchanged = $item['value'];
                 return $sep . "    " . $item['name'] . " : " . $unchanged . "\n";
             case 'changed':
-                $changedBefore = arrToStr(stringify($item['valueBefore']), $depth + 1);
-                // $changedBefore = stringify($item['valueBefore'], $depth + 1);
-                $changedAfter = arrToStr(stringify($item['valueAfter']), $depth + 1);
-                // $changedAfter = stringify($item['valueAfter'], $depth + 1);
+                $changedBefore = stringify($item['valueBefore'], $depth + 1);
+                $changedAfter = stringify($item['valueAfter'], $depth + 1);
                 return $sep . "  - " . $item['name'] . " : " . $changedBefore . "\n" . $sep .
                 "  + " . $item['name'] . " : " . $changedAfter . "\n";
             case 'removed':
-                $removed = arrToStr(stringify($item['value']), $depth + 1);
-                // $removed = stringify($item['value'], $depth + 1);
+                $removed = stringify($item['value'], $depth + 1);
                 return $sep . "  - " . $item['name'] . " : " . $removed . "\n";
             case 'added':
-                $added = arrToStr(stringify($item['value']), $depth + 1);
-                // $added = stringify($item['value'], $depth + 1);
+                $added = stringify($item['value'], $depth + 1);
                 return $sep . "  + " . $item['name'] . " : " . $added . "\n";
         }
     }, $arr);
@@ -39,7 +35,7 @@ function stylish($arr, $depth = 0)
     }
     return $res;
 }
-function stringify($data)
+function preparation($data)
 {
     if (is_null($data)) {
         return 'null';
@@ -61,7 +57,7 @@ function stringify($data)
         if (is_object($obj[$key])) {
             $acc[] = [
                 'name' => $key,
-                'value' => stringify($obj[$key])
+                'value' => preparation($obj[$key])
             ];
         } else {
             $acc[] = [
@@ -72,7 +68,6 @@ function stringify($data)
         return $acc;
     }, []);
     return $res;
-    // return arrToStr($res, $depth);
 }
 function arrToStr($arr, $depth)
 {
@@ -96,6 +91,10 @@ function addBrackets($tree, $sep)
     $tree[$first] = "{\n" . $tree[$first];
     $tree[$last] = $tree[$last] . $sep . "}";
     return $tree;
+}
+function stringify($arr, $depth)
+{
+    return arrToStr(preparation($arr), $depth);
 }
 function render($arr)
 {
