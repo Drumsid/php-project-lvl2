@@ -5,51 +5,55 @@ namespace Differ\formatters\plain;
 function buldPlain($tree)
 {
     $res = array_reduce($tree, function ($acc, $node) {
-        if (array_key_exists('type', $node) && $node['type'] == 'nested') {
-            $tmp = buldPlain($node['children']);
-            $acc = array_merge($acc, $tmp);
+        // $type = 'none';
+        $type = $node['type'];
+        // if (array_key_exists('type', $node)) {
+        //     $type = $node['type'];
+        // }
+        if (array_key_exists('path', $node)) {
+            $path = substr($node['path'], 1);
         }
-        if (array_key_exists('type', $node) && $node['type'] == 'changed') {
-            $node['valueBefore'] = stringify($node['valueBefore']);
-            $node['valueAfter'] = stringify($node['valueAfter']);
-            $acc[] = "Property '" . substr($node['path'], 1) . "' was updated. From " .
-            renderNodeValue($node['valueBefore']) .  " to "  . renderNodeValue($node['valueAfter']) . ".";
-        }
-        if (array_key_exists('type', $node) && $node['type'] == 'removed') {
-            $acc[] = "Property '" . substr($node['path'], 1) . "' was removed.";
-        }
-        if (array_key_exists('type', $node) && $node['type'] == 'added') {
-            $node['value'] = stringify($node['value']);
-            $acc[] = "Property '" . substr($node['path'], 1) . "' was added with value: " .
-            renderNodeValue($node['value']) . ".";
+        switch ($type) {
+            case 'nested':
+                $tmp = buldPlain($node['children']);
+                $acc = array_merge($acc, $tmp);
+                break;
+            case 'changed':
+                $valueBefore = stringify($node['valueBefore']);
+                $valueAfter = stringify($node['valueAfter']);
+                $acc[] = "Property '{$path}' was updated. From {$valueBefore} to {$valueAfter}.";
+                break;
+            case 'removed':
+                $acc[] = "Property '{$path}' was removed.";
+                break;
+            case 'added':
+                $value = stringify($node['value']);
+                $acc[] = "Property '{$path}' was added with value: {$value}.";
+                break;
         }
         return $acc;
     }, []);
     return $res;
 }
-function stringify($data)
+function checkValue($data)
 {
     if (is_null($data)) {
         return 'null';
     }
-    if (is_bool($data) && $data === true) {
-        return 'true';
-    }
-    if (is_bool($data) && $data === false) {
-        return 'false';
+    if (is_bool($data)) {
+        return ($data === true) ? 'true' : 'false';
     }
     if (! is_object($data)) {
         return $data;
-    } else {
-        $obj = get_object_vars($data);
     }
+    $obj = get_object_vars($data);
     $keys = array_keys($obj);
 
     $res = array_reduce($keys, function ($acc, $key) use ($obj) {
         if (is_object($obj[$key])) {
             $acc[] = [
                 'name' => $key,
-                'value' => stringify($obj[$key])
+                'value' => checkValue($obj[$key])
             ];
         } else {
             $acc[] = [
@@ -66,15 +70,14 @@ function renderNodeValue($val)
     if (is_array($val)) {
         return "[complex value]";
     }
-    return "'" . $val . "'";
+    return  "'" .  $val . "'";
 }
-
-function plain($arr)
+function stringify($data)
 {
-    return implode("\n", buldPlain($arr));
+    return renderNodeValue(checkValue($data));
 }
 
 function render($arr)
 {
-    return plain($arr);
+    return implode("\n", buldPlain($arr));
 }

@@ -3,10 +3,14 @@
 namespace Differ\builder;
 
 use function Funct\Collection\union;
+use function Funct\Collection\sortBy;
 
 function builder($objBefore, $objAfter, $path = "")
 {
     $unicKey = union(array_keys(get_object_vars($objBefore)), array_keys(get_object_vars($objAfter)));
+    // $unicKey = sortBy($unicKey, function ($num) {
+    //     return $num;
+    // });
     sort($unicKey);
     $res = array_map(function ($key) use ($objBefore, $objAfter, $path) {
         if (
@@ -46,14 +50,15 @@ function builder($objBefore, $objAfter, $path = "")
                 'path' => $path . '.' . $key,
                 'value' => $objAfter->$key
             ];
-        } else {
+        }
+        // } else {
             return [
                 'name' => $key,
                 'type' => 'unchanged',
                 'path' => $path . '.' . $key,
                 'value' => $objBefore->$key
             ];
-        }
+        // }
     }, $unicKey);
     return $res;
 }
