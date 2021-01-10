@@ -5,11 +5,7 @@ namespace Differ\formatters\plain;
 function buldPlain($tree)
 {
     $res = array_reduce($tree, function ($acc, $node) {
-        // $type = 'none';
         $type = $node['type'];
-        // if (array_key_exists('type', $node)) {
-        //     $type = $node['type'];
-        // }
         if (array_key_exists('path', $node)) {
             $path = substr($node['path'], 1);
         }
@@ -70,7 +66,7 @@ function renderNodeValue($val)
     if (is_array($val)) {
         return "[complex value]";
     }
-    return  "'" .  $val . "'";
+    return  "'$val'";
 }
 function stringify($data)
 {

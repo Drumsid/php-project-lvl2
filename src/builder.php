@@ -8,10 +8,9 @@ use function Funct\Collection\sortBy;
 function builder($objBefore, $objAfter, $path = "")
 {
     $unicKey = union(array_keys(get_object_vars($objBefore)), array_keys(get_object_vars($objAfter)));
-    // $unicKey = sortBy($unicKey, function ($num) {
-    //     return $num;
-    // });
-    sort($unicKey);
+    $sortedUnicKey = array_values(sortBy($unicKey, function ($key) {
+        return $key;
+    }));
     $res = array_map(function ($key) use ($objBefore, $objAfter, $path) {
         if (
             property_exists($objBefore, $key) && property_exists($objAfter, $key)
@@ -51,14 +50,12 @@ function builder($objBefore, $objAfter, $path = "")
                 'value' => $objAfter->$key
             ];
         }
-        // } else {
             return [
                 'name' => $key,
                 'type' => 'unchanged',
                 'path' => $path . '.' . $key,
                 'value' => $objBefore->$key
             ];
-        // }
-    }, $unicKey);
+    }, $sortedUnicKey);
     return $res;
 }
