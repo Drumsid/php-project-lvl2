@@ -6,9 +6,7 @@ function buldPlain($tree)
 {
     $res = array_reduce($tree, function ($acc, $node) {
         $type = $node['type'];
-        if (array_key_exists('path', $node)) {
-            $path = substr($node['path'], 1);
-        }
+        $path = substr($node['name'], 1);
         switch ($type) {
             case 'nested':
                 $tmp = buldPlain($node['children']);

@@ -12,7 +12,6 @@ function genDiff($filePathBefore, $filePathAfter, $format = 'stylish')
     $afterObj = parseData(getFileData($filePathAfter));
 
     $tree = builder($beforeObj, $afterObj);
-    
     return renderFormat($format, $tree);
 }
 

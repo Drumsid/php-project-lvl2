@@ -7,23 +7,24 @@ function stylish($arr, $depth = 0)
     $sep = str_repeat('    ', $depth);
     $res = array_map(function ($item) use ($sep, $depth) {
         $type = $item['type'];
+        $name = getName($item['name']);
         switch ($type) {
             case 'nested':
                 $children = stylish($item['children'], $depth + 1);
-                return "{$sep}    {$item['name']} : {$children}\n";
+                return "{$sep}    {$name} : {$children}\n";
             case 'unchanged':
                 $unchanged = $item['value'];
-                return "{$sep}    {$item['name']} : {$unchanged}\n";
+                return "{$sep}    {$name} : {$unchanged}\n";
             case 'changed':
                 $changedBefore = stringify($item['valueBefore'], $depth + 1);
                 $changedAfter = stringify($item['valueAfter'], $depth + 1);
-                return "{$sep}  - {$item['name']} : {$changedBefore}\n{$sep}  + {$item['name']} : {$changedAfter}\n";
+                return "{$sep}  - {$name} : {$changedBefore}\n{$sep}  + {$name} : {$changedAfter}\n";
             case 'removed':
                 $removed = stringify($item['value'], $depth + 1);
-                return "{$sep}  - {$item['name']} : {$removed}\n";
+                return "{$sep}  - {$name} : {$removed}\n";
             case 'added':
                 $added = stringify($item['value'], $depth + 1);
-                return "{$sep}  + {$item['name']} : {$added}\n";
+                return "{$sep}  + {$name} : {$added}\n";
         }
     }, $arr);
     if (is_array($res)) {
@@ -91,4 +92,10 @@ function stringify($arr, $depth)
 function render($arr)
 {
     return stylish($arr);
+}
+function getName($str)
+{
+    $arr = explode('.', $str);
+    $last = count($arr) - 1;
+    return $arr[$last];
 }
