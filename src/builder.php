@@ -11,7 +11,7 @@ function builder($objBefore, $objAfter, $path = "")
     $sortedUnicKey = array_values(sortBy($unicKey, function ($key) {
         return $key;
     }));
-    $res = array_map(function ($key) use ($objBefore, $objAfter, $path) {
+    $tree = array_map(function ($key) use ($objBefore, $objAfter, $path) {
         if (
             property_exists($objBefore, $key) && property_exists($objAfter, $key)
             && is_object($objBefore->$key) && is_object($objAfter->$key)
@@ -53,5 +53,5 @@ function builder($objBefore, $objAfter, $path = "")
                 'value' => $objBefore->$key
             ];
     }, $sortedUnicKey);
-    return $res;
+    return $tree;
 }

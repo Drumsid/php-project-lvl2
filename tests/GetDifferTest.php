@@ -8,65 +8,65 @@ use function Differ\genDiff\genDiff;
 
 class GetDifferTest extends TestCase
 {
-    public function testGetDeepDiffJson()
+    public function testJson()
     {
-        $correctDiffJson = file_get_contents(__DIR__ . '/fixtures/json/correctDeepJson');
-        $inCorrectDiffJson = "{incorrect:json}";
-        $beforeJson = __DIR__ . "/fixtures/jsonTestFile/deepBefore.json";
-        $afterJson = __DIR__ . "/fixtures/jsonTestFile/deepAfter.json";
-        $result1 = genDiff($beforeJson, $afterJson);
-        $this->assertSame($correctDiffJson, $result1);
-        $this->assertNotSame($inCorrectDiffJson, $result1);
+        $correctDiff = file_get_contents(__DIR__ . '/fixtures/json/correctDiff');
+        $inCorrectDiff = "{incorrect:json}";
+        $beforeJson = __DIR__ . "/fixtures/jsonTestFile/before.json";
+        $afterJson = __DIR__ . "/fixtures/jsonTestFile/after.json";
+        $result = genDiff($beforeJson, $afterJson);
+        $this->assertSame($correctDiff, $result);
+        $this->assertNotSame($inCorrectDiff, $result);
     }
 
-    public function testGetDeepDiffYml()
+    public function testYml()
     {
-        $correctDiffYml = file_get_contents(__DIR__ . '/fixtures/yml/correctDeepYml');
-        $inCorrectDiffYml = "{incorrect:json}";
-        $beforeYml = __DIR__ . "/fixtures/ymlTestFile/deepBefore.yml";
-        $afterYml = __DIR__ . "/fixtures/ymlTestFile/deepAfter.yml";
-        $result2 = genDiff($beforeYml, $afterYml);
-        $this->assertSame($correctDiffYml, $result2);
-        $this->assertNotSame($inCorrectDiffYml, $result2);
+        $correctDiff = file_get_contents(__DIR__ . '/fixtures/json/correctDiff');
+        $inCorrectDiff = "{incorrect:json}";
+        $beforeYml = __DIR__ . "/fixtures/ymlTestFile/before.yml";
+        $afterYml = __DIR__ . "/fixtures/ymlTestFile/after.yml";
+        $result = genDiff($beforeYml, $afterYml);
+        $this->assertSame($correctDiff, $result);
+        $this->assertNotSame($inCorrectDiff, $result);
     }
-    public function testGetPlainDeepDiffJson()
+    public function testPlainJson()
     {
-        $correctPlainDeepDiffJson = file_get_contents(__DIR__ . '/fixtures/plain/plainDeepDiffJson');
-        $inCorrectDiffJson = "{incorrect:json}";
-        $beforeDeepJson = __DIR__ . "/fixtures/jsonTestFile/deepBefore.json";
-        $afterDeepJson = __DIR__ . "/fixtures/jsonTestFile/deepAfter.json";
-        $result1 = genDiff($beforeDeepJson, $afterDeepJson, 'plain');
-        $this->assertSame($correctPlainDeepDiffJson, $result1);
-        $this->assertNotSame($inCorrectDiffJson, $result1);
+        $correctPlain = file_get_contents(__DIR__ . '/fixtures/plain/correctPlain');
+        $inCorrectDiff = "{incorrect:json}";
+        $beforeJson = __DIR__ . "/fixtures/jsonTestFile/before.json";
+        $afterJson = __DIR__ . "/fixtures/jsonTestFile/after.json";
+        $result = genDiff($beforeJson, $afterJson, 'plain');
+        $this->assertSame($correctPlain, $result);
+        $this->assertNotSame($inCorrectDiff, $result);
     }
-    public function testGetPlainDeepDiffYml()
+    public function testPlainYml()
     {
-        $correctPlainDeepDiffYml = file_get_contents(__DIR__ . '/fixtures/plain/plainDeepDiffYml');
-        $inCorrectDiffJson = "{incorrect:json}";
-        $beforeDeepYml = __DIR__ . "/fixtures/ymlTestFile/deepBefore.yml";
-        $afterDeepYml = __DIR__ . "/fixtures/ymlTestFile/deepAfter.yml";
-        $result1 = genDiff($beforeDeepYml, $afterDeepYml, 'plain');
-        $this->assertSame($correctPlainDeepDiffYml, $result1);
-        $this->assertNotSame($inCorrectDiffJson, $result1);
+        $correctPlain = file_get_contents(__DIR__ . '/fixtures/plain/correctPlain');
+        $inCorrectDiff = "{incorrect:json}";
+        $beforeYml = __DIR__ . "/fixtures/ymlTestFile/before.yml";
+        $afterYml = __DIR__ . "/fixtures/ymlTestFile/after.yml";
+        $result = genDiff($beforeYml, $afterYml, 'plain');
+        $this->assertSame($correctPlain, $result);
+        $this->assertNotSame($inCorrectDiff, $result);
     }
-    public function testJsonToJSonDeepDiffer()
+    public function testJsonToJSon()
     {
-        $correctDiffJson = file_get_contents(__DIR__ . '/fixtures/json/correctDeepJsonToJson');
-        $inCorrectDiffJson = "{incorrect:json}";
-        $beforeJson = __DIR__ . "/fixtures/jsonTestFile/deepBefore.json";
-        $afterJson = __DIR__ . "/fixtures/jsonTestFile/deepAfter.json";
-        $result1 = genDiff($beforeJson, $afterJson, 'json');
-        $this->assertSame($correctDiffJson, $result1);
-        $this->assertNotSame($inCorrectDiffJson, $result1);
+        $correctDiff = file_get_contents(__DIR__ . '/fixtures/json/correctJson');
+        $inCorrectDiff = "{incorrect:json}";
+        $beforeJson = __DIR__ . "/fixtures/jsonTestFile/before.json";
+        $afterJson = __DIR__ . "/fixtures/jsonTestFile/after.json";
+        $result = genDiff($beforeJson, $afterJson, 'json');
+        $this->assertSame($correctDiff, $result);
+        $this->assertNotSame($inCorrectDiff, $result);
     }
-    public function testDeepYmlToJSonDiffer()
+    public function testYmlToJSon()
     {
-        $correctDiffJson = file_get_contents(__DIR__ . '/fixtures/json/correctDeepYmlToJson');
-        $inCorrectDiffJson = "{incorrect:json}";
-        $beforeJson = __DIR__ . "/fixtures/ymlTestFile/deepBefore.yml";
-        $afterJson = __DIR__ . "/fixtures/ymlTestFile/deepAfter.yml";
-        $result1 = genDiff($beforeJson, $afterJson, 'json');
-        $this->assertSame($correctDiffJson, $result1);
-        $this->assertNotSame($inCorrectDiffJson, $result1);
+        $correctDiff = file_get_contents(__DIR__ . '/fixtures/json/correctJson');
+        $inCorrectDiff = "{incorrect:json}";
+        $beforeJson = __DIR__ . "/fixtures/ymlTestFile/before.yml";
+        $afterJson = __DIR__ . "/fixtures/ymlTestFile/after.yml";
+        $result = genDiff($beforeJson, $afterJson, 'json');
+        $this->assertSame($correctDiff, $result);
+        $this->assertNotSame($inCorrectDiff, $result);
     }
 }

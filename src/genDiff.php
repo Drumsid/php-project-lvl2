@@ -17,10 +17,13 @@ function genDiff($filePathBefore, $filePathAfter, $format = 'stylish')
 
 function getFileData($filePath)
 {
-    $res = [];
+    $result = [];
     if (file_exists($filePath)) {
-        $res['extension'] = pathinfo($filePath, PATHINFO_EXTENSION);
-        $res['data'] = file_get_contents($filePath);
+        $result['extension'] = pathinfo($filePath, PATHINFO_EXTENSION);
+        $result['data'] = file_get_contents($filePath);
+    } else {
+        $result['extension'] = pathinfo($filePath, PATHINFO_EXTENSION);
+        $result['data'] = 'no data';
     }
-    return $res;
+    return $result;
 }

@@ -4,7 +4,7 @@ namespace Differ\formatters\plain;
 
 function buldPlain($tree)
 {
-    $res = array_reduce($tree, function ($acc, $node) {
+    $plainData = array_reduce($tree, function ($acc, $node) {
         $type = $node['type'];
         $path = substr($node['name'], 1);
         switch ($type) {
@@ -27,27 +27,27 @@ function buldPlain($tree)
         }
         return $acc;
     }, []);
-    return $res;
+    return $plainData;
 }
-function checkValue($data)
+function stringify($data)
 {
     if (is_null($data)) {
-        return 'null';
+        return "'null'";
     }
     if (is_bool($data)) {
-        return ($data === true) ? 'true' : 'false';
+        return ($data === true) ? "'true'" : "'false'";
     }
     if (! is_object($data)) {
-        return $data;
+        return "'$data'";
     }
     $obj = get_object_vars($data);
     $keys = array_keys($obj);
 
-    $res = array_reduce($keys, function ($acc, $key) use ($obj) {
+    $complexValue = array_reduce($keys, function ($acc, $key) use ($obj) {
         if (is_object($obj[$key])) {
             $acc[] = [
                 'name' => $key,
-                'value' => checkValue($obj[$key])
+                'value' => stringify($obj[$key])
             ];
         } else {
             $acc[] = [
@@ -57,18 +57,11 @@ function checkValue($data)
         }
         return $acc;
     }, []);
-    return $res;
-}
-function renderNodeValue($val)
-{
-    if (is_array($val)) {
+
+    if (is_array($complexValue)) {
         return "[complex value]";
     }
-    return  "'$val'";
-}
-function stringify($data)
-{
-    return renderNodeValue(checkValue($data));
+    return  "'$complexValue'";
 }
 
 function render($arr)

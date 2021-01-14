@@ -5,7 +5,7 @@ namespace Differ\formatters\stylish;
 function stylish($arr, $depth = 0)
 {
     $sep = str_repeat('    ', $depth);
-    $res = array_map(function ($item) use ($sep, $depth) {
+    $stylishData = array_map(function ($item) use ($sep, $depth) {
         $type = $item['type'];
         $name = getName($item['name']);
         switch ($type) {
@@ -27,10 +27,10 @@ function stylish($arr, $depth = 0)
                 return "{$sep}  + {$name} : {$added}\n";
         }
     }, $arr);
-    if (is_array($res)) {
-        return implode(addBrackets($res, $sep));
+    if (is_array($stylishData)) {
+        return implode(addBrackets($stylishData, $sep));
     }
-    return $res;
+    return $stylishData;
 }
 function preparation($data)
 {
@@ -46,7 +46,7 @@ function preparation($data)
     $obj = get_object_vars($data);
     $keys = array_keys($obj);
 
-    $res = array_reduce($keys, function ($acc, $key) use ($obj) {
+    $convertToArray = array_reduce($keys, function ($acc, $key) use ($obj) {
         if (is_object($obj[$key])) {
             $acc[] = [
                 'name' => $key,
@@ -60,7 +60,7 @@ function preparation($data)
         }
         return $acc;
     }, []);
-    return $res;
+    return $convertToArray;
 }
 function arrToStr($arr, $depth)
 {
@@ -68,14 +68,14 @@ function arrToStr($arr, $depth)
     if (!is_array($arr)) {
         return $arr;
     }
-    $res = array_map(function ($node) use ($depth, $sep) {
+    $result = array_map(function ($node) use ($depth, $sep) {
         if (is_array($node['value'])) {
             return $sep . "    " . $node['name'] . " : " . arrToStr($node['value'], $depth + 1) . "\n";
         } else {
             return $sep . "    " . $node['name'] . " : " . $node['value'] . "\n";
         }
     }, $arr);
-    return implode(addBrackets($res, $sep));
+    return implode(addBrackets($result, $sep));
 }
 function addBrackets($tree, $sep)
 {
