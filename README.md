@@ -11,7 +11,7 @@
 
 ### Сравнение yml файлов
 
-[![asciicast](https://asciinema.org/a/UUUy9IuKJjNLAyQNLGtplprNH.svg)](https://asciinema.org/a/UUUy9IuKJjNLAyQNLGtplprNH)
+[![asciicast](https://asciinema.org/a/NcP9tAKmYW3D3x51extK1aK3m.svg)](https://asciinema.org/a/NcP9tAKmYW3D3x51extK1aK3m)
 
 ### Сравнение вложенных json и yml файлов (рекурсивное сравнение) обычный вывод
 
