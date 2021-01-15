@@ -2,14 +2,15 @@
 
 namespace Differ\formatters\plain;
 
-function buldPlain($tree)
+function buldPlain($tree, $path = "")
 {
-    $plainData = array_reduce($tree, function ($acc, $node) {
+    $plainData = array_reduce($tree, function ($acc, $node) use ($path) {
         $type = $node['type'];
-        $path = substr($node['name'], 1);
+        $fullPath = $path . "." . $node['name'];
+        $path = substr($fullPath, 1);
         switch ($type) {
             case 'nested':
-                $tmp = buldPlain($node['children']);
+                $tmp = buldPlain($node['children'], $fullPath);
                 $acc = array_merge($acc, $tmp);
                 break;
             case 'changed':

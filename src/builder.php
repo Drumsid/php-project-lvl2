@@ -5,13 +5,13 @@ namespace Differ\builder;
 use function Funct\Collection\union;
 use function Funct\Collection\sortBy;
 
-function builder($objBefore, $objAfter, $path = "")
+function builder($objBefore, $objAfter)
 {
     $unicKey = union(array_keys(get_object_vars($objBefore)), array_keys(get_object_vars($objAfter)));
     $sortedUnicKey = array_values(sortBy($unicKey, function ($key) {
         return $key;
     }));
-    $tree = array_map(function ($key) use ($objBefore, $objAfter, $path) {
+    $tree = array_map(function ($key) use ($objBefore, $objAfter) {
         if (
             property_exists($objBefore, $key) && property_exists($objAfter, $key)
             && is_object($objBefore->$key) && is_object($objAfter->$key)
@@ -19,7 +19,7 @@ function builder($objBefore, $objAfter, $path = "")
             return [
                 'name' => $key,
                 'type' => 'nested',
-                'children' => builder($objBefore->$key, $objAfter->$key, $path . '.' . $key)
+                'children' => builder($objBefore->$key, $objAfter->$key)
             ];
         }
         if (
@@ -27,7 +27,7 @@ function builder($objBefore, $objAfter, $path = "")
             && ($objBefore->$key != $objAfter->$key)
         ) {
             return [
-                'name' => $path . '.' . $key,
+                'name' => $key,
                 'type' => 'changed',
                 'valueBefore' => $objBefore->$key,
                 'valueAfter' => $objAfter->$key
@@ -35,20 +35,20 @@ function builder($objBefore, $objAfter, $path = "")
         }
         if (! property_exists($objAfter, $key)) {
             return [
-                'name' => $path . '.' . $key,
+                'name' => $key,
                 'type' => 'removed',
                 'value' => $objBefore->$key
             ];
         }
         if (! property_exists($objBefore, $key)) {
             return [
-                'name' => $path . '.' . $key,
+                'name' => $key,
                 'type' => 'added',
                 'value' => $objAfter->$key
             ];
         }
             return [
-                'name' => $path . '.' . $key,
+                'name' => $key,
                 'type' => 'unchanged',
                 'value' => $objBefore->$key
             ];

@@ -7,7 +7,7 @@ function stylish($arr, $depth = 0)
     $sep = str_repeat('    ', $depth);
     $stylishData = array_map(function ($item) use ($sep, $depth) {
         $type = $item['type'];
-        $name = getName($item['name']);
+        $name = $item['name'];
         switch ($type) {
             case 'nested':
                 $children = stylish($item['children'], $depth + 1);
@@ -92,10 +92,4 @@ function stringify($arr, $depth)
 function render($arr)
 {
     return stylish($arr);
-}
-function getName($str)
-{
-    $arr = explode('.', $str);
-    $last = count($arr) - 1;
-    return $arr[$last];
 }
