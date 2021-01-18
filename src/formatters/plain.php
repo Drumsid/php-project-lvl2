@@ -6,11 +6,10 @@ function buldPlain($tree, $path = "")
 {
     $plainData = array_reduce($tree, function ($acc, $node) use ($path) {
         $type = $node['type'];
-        $fullPath = $path . "." . $node['name'];
-        $path = substr($fullPath, 1);
+        $path = "{$path}{$node['name']}";
         switch ($type) {
             case 'nested':
-                $tmp = buldPlain($node['children'], $fullPath);
+                $tmp = buldPlain($node['children'], "{$path}.");
                 $acc = array_merge($acc, $tmp);
                 break;
             case 'changed':
@@ -43,7 +42,6 @@ function stringify($data)
     }
     return  "'$data'";
 }
-
 function render($arr)
 {
     return implode("\n", buldPlain($arr));

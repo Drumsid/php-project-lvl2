@@ -22,8 +22,7 @@ function getFileData($filePath)
         $result['extension'] = pathinfo($filePath, PATHINFO_EXTENSION);
         $result['data'] = file_get_contents($filePath);
     } else {
-        $result['extension'] = pathinfo($filePath, PATHINFO_EXTENSION);
-        $result['data'] = 'no data';
+        throw new \Exception("File does not exist!");
     }
     return $result;
 }

@@ -12,6 +12,6 @@ function renderFormat($format, $tree)
         case 'stylish':
             return stylish\render($tree);
         default:
-            return "Unknown format: '{$format}'!";
+            throw new \Exception("Unknown format: '{$format}'!");
     }
 }
