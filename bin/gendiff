@@ -30,6 +30,6 @@ $args = Docopt::handle($doc);
 try {
   $result = genDiff($args->args["<firstFile>"], $args->args["<secondFile>"], $args->args["--format"]);
 } catch (\Exception $e) {
-  die("Error: {$e->getMessage()}\n");
+  exit("Error: {$e->getMessage()}\n");
 }
 print_r($result);
