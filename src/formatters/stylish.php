@@ -2,33 +2,33 @@
 
 namespace Differ\formatters\stylish;
 
-function stylish($arr, $depth = 0)
+function stylish($tree, $depth = 0)
 {
-    $sep = str_repeat('    ', $depth);
-    $stylishData = array_map(function ($node) use ($sep, $depth) {
+    $indent = str_repeat('    ', $depth);
+    $stylishData = array_map(function ($node) use ($indent, $depth) {
         $type = $node['type'];
         $name = $node['name'];
         switch ($type) {
             case 'nested':
                 $children = stylish($node['children'], $depth + 1);
-                return "{$sep}    {$name} : {$children}\n";
+                return "{$indent}    {$name} : {$children}\n";
             case 'unchanged':
                 $unchanged = $node['value'];
-                return "{$sep}    {$name} : {$unchanged}\n";
+                return "{$indent}    {$name} : {$unchanged}\n";
             case 'changed':
                 $changedBefore = stringify($node['valueBefore'], $depth + 1);
                 $changedAfter = stringify($node['valueAfter'], $depth + 1);
-                return "{$sep}  - {$name} : {$changedBefore}\n{$sep}  + {$name} : {$changedAfter}\n";
+                return "{$indent}  - {$name} : {$changedBefore}\n{$indent}  + {$name} : {$changedAfter}\n";
             case 'removed':
                 $removed = stringify($node['value'], $depth + 1);
-                return "{$sep}  - {$name} : {$removed}\n";
+                return "{$indent}  - {$name} : {$removed}\n";
             case 'added':
                 $added = stringify($node['value'], $depth + 1);
-                return "{$sep}  + {$name} : {$added}\n";
+                return "{$indent}  + {$name} : {$added}\n";
         }
-    }, $arr);
+    }, $tree);
     if (is_array($stylishData)) {
-        return implode(addBrackets($stylishData, $sep));
+        return implode(addBrackets($stylishData, $indent));
     }
     return $stylishData;
 }
@@ -44,7 +44,7 @@ function stringify($data, $depth)
         $obj = get_object_vars($data);
         $keys = array_keys($obj);
 
-        $convertToArray = array_reduce($keys, function ($acc, $key) use ($obj, $depth) {
+        $dataFromObject = array_reduce($keys, function ($acc, $key) use ($obj, $depth) {
             if (is_object($obj[$key])) {
                 $acc[] = [
                     'name' => $key,
@@ -58,31 +58,32 @@ function stringify($data, $depth)
             }
             return $acc;
         }, []);
-        return arrToStr($convertToArray, $depth);
+        return arrToStr($dataFromObject, $depth);
     }
     return $data;
 }
 function arrToStr($arr, $depth)
 {
-    $sep = str_repeat('    ', $depth);
+    $indent = str_repeat('    ', $depth);
     if (!is_array($arr)) {
         return $arr;
     }
-    $result = array_map(function ($node) use ($depth, $sep) {
+    $result = array_map(function ($node) use ($depth, $indent) {
         if (is_array($node['value'])) {
-            return $sep . "    " . $node['name'] . " : " . arrToStr($node['value'], $depth + 1) . "\n";
+            $children = arrToStr($node['value'], $depth + 1);
+            return "{$indent}    {$node['name']} : {$children}\n";
         } else {
-            return $sep . "    " . $node['name'] . " : " . $node['value'] . "\n";
+            return "{$indent}    {$node['name']} : {$node['value']}\n";
         }
     }, $arr);
-    return implode(addBrackets($result, $sep));
+    return implode(addBrackets($result, $indent));
 }
-function addBrackets($tree, $sep)
+function addBrackets($tree, $indent)
 {
     $first = 0;
     $last = count($tree) - 1;
     $tree[$first] = "{\n" . $tree[$first];
-    $tree[$last] = $tree[$last] . $sep . "}";
+    $tree[$last] = $tree[$last] . $indent . "}";
     return $tree;
 }
 function render($arr)
