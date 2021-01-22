@@ -11,20 +11,20 @@ function stylish($tree, $depth = 0)
         switch ($type) {
             case 'nested':
                 $children = stylish($node['children'], $depth + 1);
-                return "{$indent}    {$name} : {$children}\n";
+                return "{$indent}    {$name}: {$children}\n";
             case 'unchanged':
                 $unchanged = $node['value'];
-                return "{$indent}    {$name} : {$unchanged}\n";
+                return "{$indent}    {$name}: {$unchanged}\n";
             case 'changed':
                 $changedBefore = stringify($node['valueBefore'], $depth + 1);
                 $changedAfter = stringify($node['valueAfter'], $depth + 1);
-                return "{$indent}  - {$name} : {$changedBefore}\n{$indent}  + {$name} : {$changedAfter}\n";
+                return "{$indent}  - {$name}: {$changedBefore}\n{$indent}  + {$name}: {$changedAfter}\n";
             case 'removed':
                 $removed = stringify($node['value'], $depth + 1);
-                return "{$indent}  - {$name} : {$removed}\n";
+                return "{$indent}  - {$name}: {$removed}\n";
             case 'added':
                 $added = stringify($node['value'], $depth + 1);
-                return "{$indent}  + {$name} : {$added}\n";
+                return "{$indent}  + {$name}: {$added}\n";
         }
     }, $tree);
     if (is_array($stylishData)) {
@@ -41,6 +41,7 @@ function stringify($data, $depth)
         return $data ? 'true' : 'false';
     }
     if (is_object($data)) {
+        print_r($data);
         $obj = get_object_vars($data);
         $keys = array_keys($obj);
 
@@ -71,9 +72,9 @@ function arrToStr($arr, $depth)
     $result = array_map(function ($node) use ($depth, $indent) {
         if (is_array($node['value'])) {
             $children = arrToStr($node['value'], $depth + 1);
-            return "{$indent}    {$node['name']} : {$children}\n";
+            return "{$indent}    {$node['name']}: {$children}\n";
         } else {
-            return "{$indent}    {$node['name']} : {$node['value']}\n";
+            return "{$indent}    {$node['name']}: {$node['value']}\n";
         }
     }, $arr);
     return implode(addBrackets($result, $indent));

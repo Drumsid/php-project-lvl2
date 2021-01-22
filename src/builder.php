@@ -12,27 +12,6 @@ function builder($objBefore, $objAfter)
         return $key;
     }));
     $tree = array_map(function ($key) use ($objBefore, $objAfter) {
-        if (
-            property_exists($objBefore, $key) && property_exists($objAfter, $key)
-            && is_object($objBefore->$key) && is_object($objAfter->$key)
-        ) {
-            return [
-                'name' => $key,
-                'type' => 'nested',
-                'children' => builder($objBefore->$key, $objAfter->$key)
-            ];
-        }
-        if (
-            property_exists($objBefore, $key) && property_exists($objAfter, $key)
-            && ($objBefore->$key != $objAfter->$key)
-        ) {
-            return [
-                'name' => $key,
-                'type' => 'changed',
-                'valueBefore' => $objBefore->$key,
-                'valueAfter' => $objAfter->$key
-            ];
-        }
         if (! property_exists($objAfter, $key)) {
             return [
                 'name' => $key,
@@ -45,6 +24,21 @@ function builder($objBefore, $objAfter)
                 'name' => $key,
                 'type' => 'added',
                 'value' => $objAfter->$key
+            ];
+        }
+        if (is_object($objBefore->$key) && is_object($objAfter->$key)) {
+            return [
+                'name' => $key,
+                'type' => 'nested',
+                'children' => builder($objBefore->$key, $objAfter->$key)
+            ];
+        }
+        if ($objBefore->$key != $objAfter->$key) {
+            return [
+                'name' => $key,
+                'type' => 'changed',
+                'valueBefore' => $objBefore->$key,
+                'valueAfter' => $objAfter->$key
             ];
         }
             return [

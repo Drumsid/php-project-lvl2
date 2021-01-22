@@ -33,3 +33,5 @@ try {
   exit("Error: {$e->getMessage()}\n");
 }
 print_r($result);
+// $testWriteFromBinDiff = Differ\differ\genDiff\genDiff($args->args["<firstFile>"], $args->args["<secondFile>"], $args->args["--format"]);
+// file_put_contents(__DIR__ . '/../tests/fixtures/correctDiff', $result);

@@ -4,7 +4,7 @@ namespace Differ\genDiff;
 
 use function Differ\builder\builder;
 use function Differ\parsers\parseData;
-use function Differ\formatters\renderFormat;
+use function Differ\formatters\format;
 
 function genDiff($filePathBefore, $filePathAfter, $format = 'stylish')
 {
@@ -12,7 +12,7 @@ function genDiff($filePathBefore, $filePathAfter, $format = 'stylish')
     $afterObj = parseData(getFileData($filePathAfter));
 
     $tree = builder($beforeObj, $afterObj);
-    return renderFormat($format, $tree);
+    return format($format, $tree);
 }
 
 function getFileData($filePath)
