@@ -20,9 +20,8 @@ function buldPlain($tree, $path = "")
             case 'added':
                 $value = stringify($node['value']);
                 return [...$acc, "Property '{$path}' was added with value: {$value}."];
-            default:
-                return $acc;
         }
+        return $acc;
     }, []);
     return $plainData;
 }
