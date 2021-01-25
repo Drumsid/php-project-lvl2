@@ -33,4 +33,3 @@ try {
   exit("Error: {$e->getMessage()}\n");
 }
 print_r($result);
-file_put_contents(__DIR__ . '/../tests/fixtures/correctPlain', $result);
