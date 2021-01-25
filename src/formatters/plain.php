@@ -36,7 +36,7 @@ function stringify($data): string
     if (is_object($data) || is_array($data)) {
         return "[complex value]";
     }
-    return is_numeric($data) ? $data : "'$data'";
+    return is_numeric($data) ? (string) $data : "'$data'";
 }
 function render(array $arr): string
 {
