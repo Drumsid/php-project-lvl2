@@ -13,7 +13,7 @@ function stylish($tree, $depth = 0)
                 $children = stylish($node['children'], $depth + 1);
                 return "{$indent}    {$name}: {$children}";
             case 'unchanged':
-                $unchanged = $node['value'];
+                $unchanged = stringify($node['value'], $depth + 1);
                 return "{$indent}    {$name}: {$unchanged}";
             case 'changed':
                 $changedBefore = stringify($node['valueBefore'], $depth + 1);
