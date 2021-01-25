@@ -27,10 +27,10 @@ function stylish(array $tree, int $depth = 0): string
                 return "{$indent}  + {$name}: {$added}";
         }
     }, $tree);
-    if (is_array($stylishData)) {
+    // if (is_array($stylishData)) {
         return implode("\n", addBrackets($stylishData, $indent));
-    }
-    return $stylishData;
+    // }
+    // return $stylishData;
 }
 function stringify($data, int $depth): string
 {

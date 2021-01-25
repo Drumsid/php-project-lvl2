@@ -1,6 +1,5 @@
 <?php
 
-// namespace Differ\genDiff;
 namespace Differ\Differ;
 
 use function Differ\builder\builder;
@@ -16,7 +15,7 @@ function genDiff(string $filePathBefore, string $filePathAfter, string $format =
     return format($format, $tree);
 }
 
-function getFileData(string $filePath)
+function getFileData(string $filePath): array
 {
     $result = [];
     if (file_exists($filePath)) {
