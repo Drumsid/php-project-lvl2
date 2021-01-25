@@ -2,7 +2,7 @@
 
 namespace Differ\formatters\plain;
 
-function buldPlain($tree, $path = "")
+function buldPlain(array $tree, string $path = ""): array
 {
     $plainData = array_reduce($tree, function ($acc, $node) use ($path) {
         $type = $node['type'];
@@ -38,7 +38,7 @@ function stringify($data)
     }
     return is_numeric($data) ? $data : "'$data'";
 }
-function render($arr)
+function render(array $arr): string
 {
     return implode("\n", buldPlain($arr));
 }

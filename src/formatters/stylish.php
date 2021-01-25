@@ -2,7 +2,7 @@
 
 namespace Differ\formatters\stylish;
 
-function stylish($tree, $depth = 0)
+function stylish(array $tree, int $depth = 0): string
 {
     $indent = str_repeat('    ', $depth);
     $stylishData = array_map(function ($node) use ($indent, $depth) {
@@ -32,7 +32,7 @@ function stylish($tree, $depth = 0)
     }
     return $stylishData;
 }
-function stringify($data, $depth)
+function stringify($data, int $depth): string
 {
     if (is_null($data)) {
         return 'null';
@@ -60,7 +60,7 @@ function stringify($data, $depth)
     }
     return $data;
 }
-function arrToStr($arr, $depth)
+function arrToStr(array $arr, int $depth): string
 {
     $indent = str_repeat('    ', $depth);
     if (!is_array($arr)) {
@@ -76,7 +76,7 @@ function arrToStr($arr, $depth)
     }, $arr);
     return implode("\n", addBrackets($result, $indent));
 }
-function addBrackets($tree, $indent)
+function addBrackets(array $tree, string $indent): array
 {
     $first = 0;
     $last = count($tree) - 1;
@@ -84,7 +84,7 @@ function addBrackets($tree, $indent)
     $tree[$last] = "{$tree[$last]}\n{$indent}}";
     return $tree;
 }
-function render($arr)
+function render(array $arr): string
 {
     return stylish($arr);
 }

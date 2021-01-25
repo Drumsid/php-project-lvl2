@@ -5,7 +5,7 @@ namespace Differ\builder;
 use function Funct\Collection\union;
 use function Funct\Collection\sortBy;
 
-function builder($objBefore, $objAfter)
+function builder(object $objBefore, object $objAfter): array
 {
     $unicKey = union(array_keys(get_object_vars($objBefore)), array_keys(get_object_vars($objAfter)));
     $sortedUnicKey = array_values(sortBy($unicKey, function ($key) {

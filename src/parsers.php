@@ -4,7 +4,7 @@ namespace Differ\parsers;
 
 use Symfony\Component\Yaml\Yaml;
 
-function parseData($dataFile)
+function parseData(array $dataFile): object
 {
     ['extension' => $extension, 'data' => $data] = $dataFile;
     switch ($extension) {

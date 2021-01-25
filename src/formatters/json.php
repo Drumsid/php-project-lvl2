@@ -2,7 +2,7 @@
 
 namespace Differ\formatters\json;
 
-function render($tree)
+function render(array $tree): string
 {
     return json_encode($tree);
 }

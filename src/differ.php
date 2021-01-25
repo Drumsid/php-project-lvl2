@@ -7,7 +7,7 @@ use function Differ\builder\builder;
 use function Differ\parsers\parseData;
 use function Differ\formatters\format;
 
-function genDiff($filePathBefore, $filePathAfter, $format = 'stylish')
+function genDiff(string $filePathBefore, string $filePathAfter, string $format = 'stylish'): string
 {
     $beforeObj = parseData(getFileData($filePathBefore));
     $afterObj = parseData(getFileData($filePathAfter));
@@ -16,7 +16,7 @@ function genDiff($filePathBefore, $filePathAfter, $format = 'stylish')
     return format($format, $tree);
 }
 
-function getFileData($filePath)
+function getFileData(string $filePath)
 {
     $result = [];
     if (file_exists($filePath)) {

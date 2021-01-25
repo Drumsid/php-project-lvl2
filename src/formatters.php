@@ -2,7 +2,7 @@
 
 namespace Differ\formatters;
 
-function format($format, $tree)
+function format(string $format, array $tree): string
 {
     switch ($format) {
         case 'plain':
