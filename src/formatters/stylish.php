@@ -27,10 +27,7 @@ function stylish(array $tree, int $depth = 0): string
                 return "{$indent}  + {$name}: {$added}";
         }
     }, $tree);
-    // if (is_array($stylishData)) {
         return implode("\n", addBrackets($stylishData, $indent));
-    // }
-    // return $stylishData;
 }
 function stringify($data, int $depth): string
 {
@@ -43,7 +40,7 @@ function stringify($data, int $depth): string
     if (is_object($data)) {
         $obj = get_object_vars($data);
         $keys = array_keys($obj);
-        $dataFromObject = array_map(function ($key) use ($obj, $depth) {
+        $dataFromObject = array_map(function ($key) use ($obj, $depth): array {
             if (is_object($obj[$key])) {
                 return [
                     'name' => $key,
@@ -63,10 +60,7 @@ function stringify($data, int $depth): string
 function arrToStr(array $arr, int $depth): string
 {
     $indent = str_repeat('    ', $depth);
-    if (!is_array($arr)) {
-        return $arr;
-    }
-    $result = array_map(function ($node) use ($depth, $indent) {
+    $result = array_map(function ($node) use ($depth, $indent): string {
         if (is_array($node['value'])) {
             $children = arrToStr($node['value'], $depth + 1);
             return "{$indent}    {$node['name']}: {$children}";
