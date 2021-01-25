@@ -1,6 +1,7 @@
 <?php
 
-namespace Differ\genDiff;
+// namespace Differ\genDiff;
+namespace Differ\Differ;
 
 use function Differ\builder\builder;
 use function Differ\parsers\parseData;
