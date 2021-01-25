@@ -9,7 +9,7 @@ function buldPlain($tree, $path = "")
         $path = "{$path}{$node['name']}";
         switch ($type) {
             case 'nested':
-                $children = buldPlain($node['children'], "{$path}");
+                $children = buldPlain($node['children'], "{$path}.");
                 return array_merge($acc, $children);
             case 'changed':
                 $valueBefore = stringify($node['valueBefore']);
