@@ -33,7 +33,7 @@ function builder($objBefore, $objAfter)
                 'children' => builder($objBefore->$key, $objAfter->$key)
             ];
         }
-        if ($objBefore->$key != $objAfter->$key) {
+        if ($objBefore->$key !== $objAfter->$key) {
             return [
                 'name' => $key,
                 'type' => 'changed',
