@@ -9,17 +9,17 @@ function buldPlain($tree, $path = "")
         $path = "{$path}{$node['name']}";
         switch ($type) {
             case 'nested':
-                $children = buldPlain($node['children'], "{$path}.");
+                $children = buldPlain($node['children'], "{$path}");
                 return array_merge($acc, $children);
             case 'changed':
                 $valueBefore = stringify($node['valueBefore']);
                 $valueAfter = stringify($node['valueAfter']);
-                return [...$acc, "Property '{$path}' was updated. From {$valueBefore} to {$valueAfter}."];
+                return [...$acc, "Property '{$path}' was updated. From {$valueBefore} to {$valueAfter}"];
             case 'removed':
-                return [...$acc, "Property '{$path}' was removed."];
+                return [...$acc, "Property '{$path}' was removed"];
             case 'added':
                 $value = stringify($node['value']);
-                return [...$acc, "Property '{$path}' was added with value: {$value}."];
+                return [...$acc, "Property '{$path}' was added with value: {$value}"];
         }
         return $acc;
     }, []);
