@@ -5,7 +5,7 @@ namespace Differ\formatters\stylish;
 function stylish(array $tree, int $depth = 0): string
 {
     $indent = str_repeat('    ', $depth);
-    $stylishData = array_map(function ($node) use ($indent, $depth) {
+    $stylishData = array_map(function ($node) use ($indent, $depth): string {
         $type = $node['type'];
         $name = $node['name'];
         switch ($type) {
