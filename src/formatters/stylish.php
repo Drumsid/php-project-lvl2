@@ -8,6 +8,7 @@ function stylish(array $tree, int $depth = 0): string
     $stylishData = array_map(function ($node) use ($indent, $depth): string {
         $type = $node['type'];
         $name = $node['name'];
+        $result = "";
         switch ($type) {
             case 'nested':
                 $children = stylish($node['children'], $depth + 1);
@@ -76,15 +77,33 @@ function arrToStr(array $arr, int $depth): string
     }, $arr);
     return implode("\n", addBrackets($result, $indent));
 }
+// function addBrackets(array $tree, string $indent): array
+// {
+//     $first = 0;
+//     $last = count($tree) - 1;
+//     $tree[$first] = "{\n{$tree[$first]}";
+//     $tree[$last] = "{$tree[$last]}\n{$indent}}";
+//     print_r($tree);
+//     return $tree;
+// }
+
 function addBrackets(array $tree, string $indent): array
 {
-    $first = 0;
     $last = count($tree) - 1;
-    // $tree[$first] = "{\n{$tree[$first]}";
-    // $tree[$last] = "{$tree[$last]}\n{$indent}}";
-    $tree[$first] = "{\n{$tree[0]}";
-    $tree[$last] = "{$tree[count($tree) - 1]}\n{$indent}}";
-    return $tree;
+    $keys = array_keys($tree);
+    $result = array_map(function ($item, $key) use ($last, $indent) {
+        if ($last == 0) {
+             return "{\n{$item}\n{$indent}}";
+        }
+        if ($key === 0) {
+            return "{\n{$item}";
+        }
+        if ($key === $last) {
+            return "{$item}\n{$indent}}";
+        }
+        return $item;
+    }, $tree, $keys);
+    return $result;
 }
 function render(array $arr): string
 {
