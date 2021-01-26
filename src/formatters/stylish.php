@@ -76,11 +76,14 @@ function arrToStr(array $arr, int $depth): string
 function addBrackets(array $tree, string $indent): array
 {
     $last = count($tree) - 1;
+    if ($last == 0) {
+        return ["{\n{$tree[$last]}\n{$indent}}"];
+    }
     $keys = array_keys($tree);
     $result = array_map(function ($item, $key) use ($last, $indent) {
-        if ($last == 0) {
-             return "{\n{$item}\n{$indent}}";
-        }
+        // if ($last == 0) {
+        //      return "{\n{$item}\n{$indent}}";
+        // }
         if ($key === 0) {
             return "{\n{$item}";
         }
