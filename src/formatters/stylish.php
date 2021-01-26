@@ -12,30 +12,20 @@ function stylish(array $tree, int $depth = 0): string
         switch ($type) {
             case 'nested':
                 $children = stylish($node['children'], $depth + 1);
-                // $result = "{$indent}    {$name}: {$children}";
                 return "{$indent}    {$name}: {$children}";
-                // break;
             case 'unchanged':
                 $unchanged = stringify($node['value'], $depth + 1);
-                // $result = "{$indent}    {$name}: {$unchanged}";
                 return "{$indent}    {$name}: {$unchanged}";
-                // break;
             case 'changed':
                 $changedBefore = stringify($node['valueBefore'], $depth + 1);
                 $changedAfter = stringify($node['valueAfter'], $depth + 1);
-                // $result = "{$indent}  - {$name}: {$changedBefore}\n{$indent}  + {$name}: {$changedAfter}";
                 return "{$indent}  - {$name}: {$changedBefore}\n{$indent}  + {$name}: {$changedAfter}";
-                // break;
             case 'removed':
                 $removed = stringify($node['value'], $depth + 1);
-                // $result = "{$indent}  - {$name}: {$removed}";
                 return "{$indent}  - {$name}: {$removed}";
-                // break;
             case 'added':
                 $added = stringify($node['value'], $depth + 1);
-                // $result = "{$indent}  + {$name}: {$added}";
                 return "{$indent}  + {$name}: {$added}";
-                // break;
         }
         return $result;
     }, $tree);
@@ -82,15 +72,6 @@ function arrToStr(array $arr, int $depth): string
     }, $arr);
     return implode("\n", addBrackets($result, $indent));
 }
-// function addBrackets(array $tree, string $indent): array
-// {
-//     $first = 0;
-//     $last = count($tree) - 1;
-//     $tree[$first] = "{\n{$tree[$first]}";
-//     $tree[$last] = "{$tree[$last]}\n{$indent}}";
-//     print_r($tree);
-//     return $tree;
-// }
 
 function addBrackets(array $tree, string $indent): array
 {
