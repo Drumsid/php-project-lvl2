@@ -17,19 +17,11 @@ function genDiff(string $filePathBefore, string $filePathAfter, string $format =
 
 function getFileData(string $filePath): array
 {
-    // $result = [];
-    // if (file_exists($filePath)) {
-    //     $result['extension'] = pathinfo($filePath, PATHINFO_EXTENSION);
-    //     $result['data'] = file_get_contents($filePath);
-    // } else {
-    //     throw new \Exception("File does not exist!");
-    // }
     if (! file_exists($filePath)) {
         throw new \Exception("File does not exist!");
     }
     $extension = pathinfo($filePath, PATHINFO_EXTENSION);
     $data = file_get_contents($filePath);
-    // $result['extension'] = $extension;
-    // $result['data'] = $data;
+
     return ['extension' => $extension, 'data' => $data];
 }
