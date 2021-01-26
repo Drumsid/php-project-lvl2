@@ -1,6 +1,6 @@
 <?php
 
-namespace Differ\formatters\json;
+namespace Differ\Formatters\Json;
 
 function render(array $tree): string
 {

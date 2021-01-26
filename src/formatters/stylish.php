@@ -1,6 +1,6 @@
 <?php
 
-namespace Differ\formatters\stylish;
+namespace Differ\Formatters\Stylish;
 
 function stylish(array $tree, int $depth = 0): string
 {
@@ -81,9 +81,6 @@ function addBrackets(array $tree, string $indent): array
     }
     $keys = array_keys($tree);
     $result = array_map(function ($item, $key) use ($last, $indent) {
-        // if ($last == 0) {
-        //      return "{\n{$item}\n{$indent}}";
-        // }
         if ($key === 0) {
             return "{\n{$item}";
         }

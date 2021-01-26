@@ -2,9 +2,9 @@
 
 namespace Differ\Differ;
 
-use function Differ\builder\builder;
-use function Differ\parsers\parseData;
-use function Differ\formatters\format;
+use function Differ\Builder\builder;
+use function Differ\Parsers\parseData;
+use function Differ\Formatters\format;
 
 function genDiff(string $filePathBefore, string $filePathAfter, string $format = 'stylish'): string
 {

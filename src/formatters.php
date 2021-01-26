@@ -1,16 +1,16 @@
 <?php
 
-namespace Differ\formatters;
+namespace Differ\Formatters;
 
 function format(string $format, array $tree): string
 {
     switch ($format) {
         case 'plain':
-            return plain\render($tree);
+            return Plain\render($tree);
         case 'json':
-            return json\render($tree);
+            return Json\render($tree);
         case 'stylish':
-            return stylish\render($tree);
+            return Stylish\render($tree);
         default:
             throw new \Exception("Unknown format: '{$format}'!");
     }

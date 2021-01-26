@@ -1,6 +1,6 @@
 <?php
 
-namespace Differ\formatters\plain;
+namespace Differ\Formatters\Plain;
 
 function buldPlain(array $tree, string $path = ""): array
 {

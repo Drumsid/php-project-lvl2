@@ -1,6 +1,6 @@
 <?php
 
-namespace Differ\builder;
+namespace Differ\Builder;
 
 use function Funct\Collection\union;
 use function Funct\Collection\sortBy;
